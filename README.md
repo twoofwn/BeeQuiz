@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://twoofwn.github.io/BeeQuiz/">
-    <img src="./bee-pixel-logo.svg" alt="BeeQuiz — Pixel bee quiz app" width="10%" />
+    <img src="./assets/images/bee-pixel-logo.svg" alt="BeeQuiz — Pixel bee quiz app" width="10%" />
   </a>
 
   <h3>🐝 Học một chút, nhớ thật lâu.</h3>
@@ -17,7 +17,7 @@
 | Tính năng | Mô tả |
 | :--- | :--- |
 | 📚 **Thư viện bộ đề** | Tìm kiếm và chọn môn học từ dropdown; không cần tải JSON lên bằng tay. |
-| 🔀 **Trộn thẻ** | Đảo thứ tự câu hỏi và đáp án để mỗi lượt ôn tập bớt nhàm chán. |
+| 🔀 **Trộn thẻ** | Chỉ đảo các câu chưa chọn đáp án; giữ nguyên vị trí, đáp án và điểm của các câu đã làm. |
 | 🎯 **Làm bài & chấm điểm** | Chọn đáp án, xem đúng/sai, theo dõi điểm số và tiến độ. |
 | 💡 **Giải thích đáp án** | Xem phần giải thích nếu bộ đề có cung cấp. |
 | ⭐ **Đánh dấu câu hỏi** | Lưu các câu muốn xem lại trong phiên sử dụng. |
@@ -41,7 +41,7 @@ Giao diện lấy cảm hứng từ pixel art, với linh vật ong nhỏ và b�
 1. Truy cập BeeQuiz.
 2. Tìm tên hoặc mã môn trong dropdown bộ đề.
 3. Chọn bộ đề, bắt đầu làm bài và xem giải thích sau khi trả lời.
-4. Dùng Trộn thẻ để đổi thứ tự câu hỏi; đánh dấu các câu cần ôn lại.
+4. Dùng Trộn thẻ để xáo các câu chưa chọn đáp án mà vẫn giữ tiến độ; đánh dấu các câu cần ôn lại. Chọn Trộn & làm lại ở màn hình kết quả để bắt đầu lượt mới và trộn toàn bộ bộ đề.
 5. Chuyển sang Tất cả câu hỏi để tìm kiếm, lọc và xem đáp án.
 🧩 Thêm bộ đề mới
 BeeQuiz là website tĩnh, không cần backend. Danh sách môn học được tạo tự động khi deploy thông qua GitHub Actions; trình duyệt tải danh mục và dữ liệu bằng JavaScript.
@@ -69,6 +69,18 @@ Không cần sửa HTML để thêm môn. Lưu ý: GitHub Pages không tự li�
 
 🛠️ Công nghệ
 HTML5 · Tailwind CSS · JavaScript (Vanilla JS) · GitHub Pages · GitHub Actions
+
+Cấu trúc mã nguồn:
+```text
+index.html                     Giao diện HTML
+assets/css/styles.css          CSS của ứng dụng
+assets/images/                 Logo và hình ảnh
+scripts/app.js                 Logic và sự kiện giao diện
+scripts/generate-catalog.mjs   Tạo danh mục bộ đề
+scripts/shuffle.test.mjs       Kiểm thử logic trộn thẻ
+data/                          Các bộ câu hỏi JSON
+```
+
 💻 Chạy ở máy cá nhân
 Cần cài Node.js. Tại thư mục gốc dự án:
 ```
@@ -77,8 +89,11 @@ npx serve .
 ```
 
 Mở địa chỉ local được in ra trên terminal. Không nên mở trực tiếp index.html qua file:// vì fetch() có thể bị trình duyệt chặn.
+
 🤝 Đóng góp
+
 Có bộ câu hỏi hay? Bạn có thể mở Pull Request để bổ sung JSON trong data/, báo lỗi hoặc đề xuất tính năng tại GitHub repository.
+
 <div align="center">
   <strong>Made for curious minds, one quiz at a time.</strong><br/>
   <a href="https://twoofwn.github.io/BeeQuiz/">🐝 Bắt đầu ôn tập với BeeQuiz →</a>
