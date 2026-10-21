@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://twoofwn.github.io/BeeQuiz/">
-    <img src="assets/readme-banner.svg" alt="BeeQuiz — Pixel bee quiz app" width="100%" />
+    <img src="./bee-pixel-logo.svg" alt="BeeQuiz — Pixel bee quiz app" width="100%" />
   </a>
 
   <h3>🐝 Học một chút, nhớ thật lâu.</h3>
@@ -45,6 +45,7 @@ BeeQuiz là website tĩnh, không cần backend. Danh sách môn học được 
 Đặt file .json vào thư mục data/ (có thể có thư mục con), sau đó commit và push lên nhánh main. Khi workflow deploy hoàn tất, bộ đề mới sẽ xuất hiện trong dropdown.
 
 Ví dụ cấu trúc JSON:
+```
 {
   "name": "PRM393 - Flutter",
   "questionsList": [
@@ -59,6 +60,7 @@ Ví dụ cấu trúc JSON:
     }
   ]
 }
+```
 Không cần sửa HTML để thêm môn. Lưu ý: GitHub Pages không tự liệt kê file trong thư mục; workflow tạo data/index.json từ các file JSON trong lúc build.
 
 🛠️ Công nghệ
