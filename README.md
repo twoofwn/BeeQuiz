@@ -11,15 +11,19 @@
   <p><strong>🌐 Website:</strong> <a href="https://twoofwn.github.io/BeeQuiz/">https://twoofwn.github.io/BeeQuiz/</a></p>
 </div>
 
-✨ BeeQuiz có gì?
-Tính năng	Mô tả
-📚 Thư viện bộ đề	Tìm kiếm và chọn môn học từ dropdown; không cần tải JSON lên bằng tay.
-🔀 Trộn thẻ	Đảo thứ tự câu hỏi và đáp án để mỗi lượt ôn tập bớt nhàm chán.
-🎯 Làm bài & chấm điểm	Chọn đáp án, xem đúng/sai, theo dõi điểm số và tiến độ.
-💡 Giải thích đáp án	Xem phần giải thích nếu bộ đề có cung cấp.
-⭐ Đánh dấu câu hỏi	Lưu các câu muốn xem lại trong phiên sử dụng.
-🔎 Tra cứu nhanh	Tìm theo nội dung câu hỏi/đáp án, lọc câu đã đánh dấu và phân trang.
-📱 Responsive	Dùng được trên điện thoại lẫn máy tính.
+
+## ✨ BeeQuiz có gì?
+
+| Tính năng | Mô tả |
+| :--- | :--- |
+| 📚 **Thư viện bộ đề** | Tìm kiếm và chọn môn học từ dropdown; không cần tải JSON lên bằng tay. |
+| 🔀 **Trộn thẻ** | Đảo thứ tự câu hỏi và đáp án để mỗi lượt ôn tập bớt nhàm chán. |
+| 🎯 **Làm bài & chấm điểm** | Chọn đáp án, xem đúng/sai, theo dõi điểm số và tiến độ. |
+| 💡 **Giải thích đáp án** | Xem phần giải thích nếu bộ đề có cung cấp. |
+| ⭐ **Đánh dấu câu hỏi** | Lưu các câu muốn xem lại trong phiên sử dụng. |
+| 🔎 **Tra cứu nhanh** | Tìm theo nội dung câu hỏi/đáp án, lọc câu đã đánh dấu và phân trang. |
+| 📱 **Responsive** | Dùng được trên điện thoại lẫn máy tính. |
+
 
 
 Vào học ngay: Mở BeeQuiz →
@@ -67,8 +71,11 @@ Không cần sửa HTML để thêm môn. Lưu ý: GitHub Pages không tự li�
 HTML5 · Tailwind CSS · JavaScript (Vanilla JS) · GitHub Pages · GitHub Actions
 💻 Chạy ở máy cá nhân
 Cần cài Node.js. Tại thư mục gốc dự án:
+```
 node scripts/generate-catalog.mjs
 npx serve .
+```
+
 Mở địa chỉ local được in ra trên terminal. Không nên mở trực tiếp index.html qua file:// vì fetch() có thể bị trình duyệt chặn.
 🤝 Đóng góp
 Có bộ câu hỏi hay? Bạn có thể mở Pull Request để bổ sung JSON trong data/, báo lỗi hoặc đề xuất tính năng tại GitHub repository.
