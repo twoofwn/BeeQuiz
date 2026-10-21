@@ -19,8 +19,9 @@
 | 📚 **Thư viện bộ đề** | Tìm kiếm và chọn môn học từ dropdown; không cần tải JSON lên bằng tay. |
 | 🔀 **Trộn thẻ** | Chỉ đảo các câu chưa chọn đáp án; giữ nguyên vị trí, đáp án và điểm của các câu đã làm. |
 | 🎯 **Làm bài & chấm điểm** | Chọn đáp án, xem đúng/sai, theo dõi điểm số và tiến độ. |
+| 💾 **Tự lưu tiến độ** | Lưu riêng từng bộ đề bằng localStorage; mở lại để tiếp tục từ câu đang học, giữ đáp án, điểm, thứ tự trộn và màn hình kết quả. |
 | 💡 **Giải thích đáp án** | Xem phần giải thích nếu bộ đề có cung cấp. |
-| ⭐ **Đánh dấu câu hỏi** | Lưu các câu muốn xem lại trong phiên sử dụng. |
+| ⭐ **Đánh dấu câu hỏi** | Lưu các câu muốn xem lại, kể cả khi đóng rồi mở lại app. |
 | 🔎 **Tra cứu nhanh** | Tìm theo nội dung câu hỏi/đáp án, lọc câu đã đánh dấu và phân trang. |
 | 📱 **Responsive** | Dùng được trên điện thoại lẫn máy tính. |
 
@@ -43,6 +44,9 @@ Giao diện lấy cảm hứng từ pixel art, với linh vật ong nhỏ và b�
 3. Chọn bộ đề, bắt đầu làm bài và xem giải thích sau khi trả lời.
 4. Dùng Trộn thẻ để xáo các câu chưa chọn đáp án mà vẫn giữ tiến độ; đánh dấu các câu cần ôn lại. Chọn Trộn & làm lại ở màn hình kết quả để bắt đầu lượt mới và trộn toàn bộ bộ đề.
 5. Chuyển sang Tất cả câu hỏi để tìm kiếm, lọc và xem đáp án.
+
+Tiến độ tự lưu trên cùng trình duyệt và thiết bị sau mỗi thao tác học. Chuyển môn rồi quay lại vẫn tiếp tục được bài đang làm. Nút Làm lại bắt đầu lượt mới cho bộ đề hiện tại và giữ các câu đã đánh dấu. Xóa dữ liệu trang web trong trình duyệt sẽ xóa tiến độ đã lưu.
+
 🧩 Thêm bộ đề mới
 BeeQuiz là website tĩnh, không cần backend. Danh sách môn học được tạo tự động khi deploy thông qua GitHub Actions; trình duyệt tải danh mục và dữ liệu bằng JavaScript.
 
@@ -76,8 +80,10 @@ index.html                     Giao diện HTML
 assets/css/styles.css          CSS của ứng dụng
 assets/images/                 Logo và hình ảnh
 scripts/app.js                 Logic và sự kiện giao diện
+scripts/storage.js             Lưu và khôi phục tiến độ học
 scripts/generate-catalog.mjs   Tạo danh mục bộ đề
 scripts/shuffle.test.mjs       Kiểm thử logic trộn thẻ
+scripts/progress.test.mjs      Kiểm thử lưu và khôi phục tiến độ
 data/                          Các bộ câu hỏi JSON
 ```
 

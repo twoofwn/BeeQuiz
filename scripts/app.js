@@ -5,11 +5,13 @@ let answerOrder = new Map();
 let activeView = "quiz";
 let filteredQuestions = [];
 let bookmarks = new Set();
+let questionRevisions = new Map();
 
 // Quiz View State
 let currentQuizIdx = 0;
 let quizScore = 0;
 let userAnswers = {}; // { questionId: selectedAnswerId }
+let quizCompleted = false;
 
 // List View State
 let currentPage = 1;
@@ -98,7 +100,7 @@ async function refreshSubjects() {
             return;
         }
         const stillAvailable = quizCatalog.some(item => item.path === currentQuizPath);
-        const saved = localStorage.getItem('beequiz-last-subject');
+        const saved = readStorageItem('beequiz-last-subject');
         const preferred = stillAvailable ? currentQuizPath : (quizCatalog.find(item => item.path === saved)?.path || quizCatalog[0].path);
         if (!stillAvailable || !quizData) await loadSelectedQuiz(preferred);
         else updateSelectedSubject();
@@ -181,8 +183,9 @@ async function loadSelectedQuiz(filePath) {
         const data = await response.json();
         if (requestId !== quizFetchCounter) return;
         if (!data || !Array.isArray(data.questionsList) || !data.questionsList.length) throw new Error('Thiếu questionsList hoặc danh sách rỗng');
+        saveQuizProgress();
         currentQuizPath = filePath;
-        localStorage.setItem('beequiz-last-subject', filePath);
+        writeStorageItem('beequiz-last-subject', filePath);
         updateSelectedSubject();
         initData(data);
         renderSubjectOptions();
@@ -203,17 +206,50 @@ function initData(data) {
     orderedQuestions = [...data.questionsList];
     answerOrder = new Map();
     bookmarks = new Set();
+    questionRevisions = new Map(data.questionsList.map(question => [String(question.id), questionRevision(question)]));
     document.getElementById("app-title").textContent = data.name || "Hệ thống trắc nghiệm thông minh";
-    showNotice(false);
 
-    // Reset trạng thái bài tập
+    // Start with defaults, then restore this subject's saved session.
     currentQuizIdx = 0;
     quizScore = 0;
     userAnswers = {};
+    quizCompleted = false;
+    activeView = 'quiz';
+    const saved = loadStudyProgress(currentQuizPath, data.questionsList, questionRevisions);
+    if (saved) {
+        orderedQuestions = saved.orderedQuestions;
+        answerOrder = saved.answerOrder;
+        userAnswers = saved.userAnswers;
+        bookmarks = saved.bookmarks;
+        currentQuizIdx = saved.currentQuizIdx;
+        quizCompleted = saved.completed;
+        activeView = saved.activeView;
+        // Recompute the score from the current answer key instead of trusting saved totals.
+        quizScore = orderedQuestions.filter(question =>
+            Object.prototype.hasOwnProperty.call(userAnswers, question.id) &&
+            question.answersList.some(answer => answer.id === userAnswers[question.id] && answer.is_correct)
+        ).length;
+    }
 
     // Render cả 2 giao diện
-    loadQuizQuestion();
+    if (quizCompleted) showQuizResult();
+    else loadQuizQuestion();
     applyFilters();
+    showNotice(false);
+}
+
+function saveQuizProgress() {
+    if (!quizData || !currentQuizPath) return;
+    saveStudyProgress(currentQuizPath, {
+        questionIds: orderedQuestions.map(question => question.id),
+        questionRevisions: [...questionRevisions],
+        answerOrder: [...answerOrder].map(([id, answers]) => [id, answers.map(answer => answer.id)]),
+        userAnswers: Object.entries(userAnswers),
+        bookmarks: [...bookmarks],
+        currentQuestionId: orderedQuestions[currentQuizIdx]?.id,
+        completed: quizCompleted,
+        activeView,
+    });
 }
 
 function showNotice(show) {
@@ -252,11 +288,13 @@ function switchView(view) {
         listView.classList.remove("hidden");
         quizView.classList.add("hidden");
     }
+    saveQuizProgress();
 }
 
 /* ==================== QUIZ VIEW LOGIC ==================== */
 function loadQuizQuestion() {
     if (!quizData || !orderedQuestions.length) return;
+    quizCompleted = false;
 
     const total = orderedQuestions.length;
     const q = orderedQuestions[currentQuizIdx];
@@ -276,7 +314,7 @@ function loadQuizQuestion() {
     const optionsBox = document.getElementById("quiz-options");
     optionsBox.innerHTML = "";
 
-    const hasAnswered = userAnswers.hasOwnProperty(q.id);
+    const hasAnswered = Object.prototype.hasOwnProperty.call(userAnswers, q.id);
     const selectedAnsId = userAnswers[q.id];
 
     getOrderedAnswers(q).forEach((ans) => {
@@ -326,29 +364,40 @@ function loadQuizQuestion() {
 }
 
 function selectQuizAnswer(questionId, answerId, isCorrect) {
+    if (Object.prototype.hasOwnProperty.call(userAnswers, questionId)) return;
     userAnswers[questionId] = answerId;
     if (isCorrect) quizScore++;
     loadQuizQuestion();
+    saveQuizProgress();
+}
+
+function showQuizResult() {
+    document.getElementById("quiz-active-card").classList.add("hidden");
+    document.getElementById("quiz-result-card").classList.remove("hidden");
+    const total = orderedQuestions.length;
+    document.getElementById("quiz-result-summary").textContent = `Bạn đã hoàn thành đúng ${quizScore} / ${total} câu hỏi (${Math.round((quizScore / total) * 100)}%).`;
 }
 
 function navigateQuiz(step) {
     const total = orderedQuestions.length;
     if (currentQuizIdx + step >= total) {
-        // Show result
-        document.getElementById("quiz-active-card").classList.add("hidden");
-        document.getElementById("quiz-result-card").classList.remove("hidden");
-        document.getElementById("quiz-result-summary").textContent = `Bạn đã hoàn thành đúng ${quizScore} / ${total} câu hỏi (${Math.round((quizScore / total) * 100)}%).`;
+        quizCompleted = true;
+        showQuizResult();
+        saveQuizProgress();
         return;
     }
     currentQuizIdx = Math.max(0, currentQuizIdx + step);
     loadQuizQuestion();
+    saveQuizProgress();
 }
 
 function restartQuiz() {
     currentQuizIdx = 0;
     quizScore = 0;
     userAnswers = {};
+    quizCompleted = false;
     loadQuizQuestion();
+    saveQuizProgress();
 }
 
 // Fisher–Yates returns a new array without mutating the source data.
@@ -390,6 +439,7 @@ function shuffleCards() {
     loadQuizQuestion();
     applyFilters();
     status.textContent = `Đã trộn ${unanswered.length} câu chưa chọn đáp án. Tiến độ và các câu đã trả lời được giữ nguyên.`;
+    saveQuizProgress();
 }
 
 function shuffleAndRestart() {
@@ -501,6 +551,7 @@ function toggleBookmark(qId) {
         bookmarks.add(qId);
     }
     renderQuestionList();
+    saveQuizProgress();
 }
 
 function toggleAllAnswers() {
