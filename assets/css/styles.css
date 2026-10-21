@@ -23,6 +23,16 @@
     width: 10%;
 }
 
+.quiz-shortcuts kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    border: 1px solid var(--pale);
+    border-radius: 4px;
+    background: var(--cream);
+    font: inherit;
+    font-weight: 600;
+}
+
 :root {
     --brand: #425B9A;
     --sky: #76C0EC;

@@ -46,15 +46,21 @@ function visit(storage = new Map(), decks = { 'data/a.json': deck, 'data/b.json'
         };
     }
     const nodes = new Map();
+    const documentListeners = new Map();
     const node = id => {
         if (!nodes.has(id)) nodes.set(id, element());
         return nodes.get(id);
     };
     node('filter-bookmark').value = 'all';
+    node('subject-dropdown').classList.add('hidden');
     const context = vm.createContext({
         window: { addEventListener() {} },
         document: {
-            addEventListener() {}, getElementById: node,
+            addEventListener(type, listener) {
+                if (!documentListeners.has(type)) documentListeners.set(type, []);
+                documentListeners.get(type).push(listener);
+            },
+            getElementById: node,
             createElement: element, querySelectorAll: () => [],
         },
         localStorage: {
@@ -78,12 +84,22 @@ function visit(storage = new Map(), decks = { 'data/a.json': deck, 'data/b.json'
     });
     const run = code => vm.runInContext(code, context);
     scripts.forEach(run);
+    const press = (key, overrides = {}) => {
+        const event = {
+            key, defaultPrevented: false,
+            target: { closest: () => null, matches: () => false },
+            preventDefault() { this.defaultPrevented = true; },
+            ...overrides,
+        };
+        for (const listener of documentListeners.get('keydown') || []) listener(event);
+        return event.defaultPrevented;
+    };
     const state = () => JSON.parse(run(`JSON.stringify({
         path: currentQuizPath, ids: orderedQuestions.map(q => q.id),
         choices: orderedQuestions.map(q => [q.id, getOrderedAnswers(q).map(a => a.id)]),
         userAnswers, quizScore, currentQuizIdx, quizCompleted, activeView, bookmarks: [...bookmarks]
     })`));
-    return { run, state, node, storage, start: () => run('refreshSubjects()') };
+    return { run, state, node, storage, press, start: () => run('bindEvents(); refreshSubjects()') };
 }
 
 test('a fresh visit resumes answers, score, position, shuffled choices, bookmarks and active view', async () => {
@@ -223,4 +239,126 @@ test('blocked storage or quota errors do not prevent loading and answering quest
         assert.equal(app.state().quizScore, 1);
         assert.equal(app.state().currentQuizIdx, 1);
     }
+});
+
+test('A–D select the visible answer after shuffle, keep labels, and persist on a fresh visit', async () => {
+    const fourAnswers = structuredClone(deck);
+    fourAnswers.questionsList.forEach(question => {
+        question.answersList.push({ id: 3, content: 'Fourth choice', is_correct: false });
+    });
+    const decks = { 'data/a.json': fourAnswers };
+    for (const [index, key] of ['a', 'B', 'c', 'D'].entries()) {
+        const first = visit(new Map(), decks);
+        await first.start();
+        first.run('shuffleCards()');
+        const questionId = first.state().ids[0];
+        const answerId = first.state().choices[0][1][index];
+        assert.notEqual(answerId, index);
+        assert.equal(first.press(key), true);
+        assert.equal(first.state().userAnswers[questionId], answerId);
+        assert.equal(first.state().quizScore, Number(answerId === 0));
+        first.node('quiz-options').children.forEach((button, position) => {
+            const label = String.fromCharCode(65 + position);
+            assert.match(button.innerHTML, new RegExp(`>\\s*${label}\\s*</span>`));
+            assert.equal(button.disabled, true);
+        });
+
+        const second = visit(first.storage, decks);
+        await second.start();
+        assert.deepEqual(second.state(), first.state());
+        second.press('a');
+        assert.deepEqual(second.state(), first.state());
+        second.press('ArrowRight');
+        const nextQuestion = second.state().ids[1];
+        const nextAnswer = second.state().choices[1][1][index];
+        second.press(key);
+        assert.equal(second.state().userAnswers[nextQuestion], nextAnswer);
+    }
+});
+
+test('arrow keys and Enter navigate once, respect the first question, and save completion', async () => {
+    const first = visit();
+    await first.start();
+    assert.equal(first.press('ArrowLeft'), true);
+    assert.equal(first.state().currentQuizIdx, 0);
+    assert.equal(first.press('ArrowRight'), true);
+    assert.equal(first.state().currentQuizIdx, 1);
+    assert.equal(first.press('Enter'), true);
+    assert.equal(first.state().currentQuizIdx, 2);
+    assert.equal(first.press('Enter', { repeat: true }), false);
+    assert.equal(first.state().currentQuizIdx, 2);
+    first.press('ArrowLeft');
+    assert.equal(first.state().currentQuizIdx, 1);
+    const second = visit(first.storage);
+    await second.start();
+    assert.equal(second.state().currentQuizIdx, 1);
+    second.press('Enter');
+    second.press('Enter');
+    second.press('Enter');
+    assert.equal(second.state().quizCompleted, true);
+    const third = visit(second.storage);
+    await third.start();
+    assert.equal(third.state().quizCompleted, true);
+    assert.equal(third.press('ArrowLeft'), false);
+    assert.equal(third.press('a'), false);
+});
+
+test('shortcuts leave text fields, editable content, modifiers, composition and other views alone', async () => {
+    const app = visit();
+    await app.start();
+    const before = app.state();
+    const overrides = [
+        ...['input', 'textarea', 'select', '[role="textbox"]'].map(selector => ({
+            target: {
+                matches: () => false,
+                closest: selectors => selectors.includes(selector) ? {} : null,
+            },
+        })),
+        { target: { isContentEditable: true, matches: () => false } },
+        { ctrlKey: true }, { metaKey: true }, { altKey: true },
+        { isComposing: true }, { repeat: true }, { defaultPrevented: true },
+    ];
+    for (const options of overrides) {
+        for (const key of ['a', 'ArrowLeft', 'ArrowRight', 'Enter']) app.press(key, options);
+        assert.deepEqual(app.state(), before);
+    }
+    app.node('subject-dropdown').classList.remove('hidden');
+    app.press('a');
+    app.press('ArrowRight');
+    assert.deepEqual(app.state(), before);
+    app.node('subject-dropdown').classList.add('hidden');
+    app.run('switchView("list")');
+    const listState = app.state();
+    app.press('a');
+    app.press('ArrowRight');
+    app.press('Enter');
+    assert.deepEqual(app.state(), listState);
+});
+
+test('Enter on an answer advances without picking it; other buttons retain native Enter behavior', async () => {
+    const app = visit();
+    await app.start();
+    const buttonTarget = {
+        matches: () => false,
+        closest: selector => selector === 'button, a, [role="button"]' ? {} : null,
+    };
+    assert.equal(app.press('Enter', { target: buttonTarget }), false);
+    assert.equal(app.state().currentQuizIdx, 0);
+    const answerTarget = {
+        ...buttonTarget,
+        closest: selector => ['button, a, [role="button"]', '#quiz-options'].includes(selector) ? {} : null,
+    };
+    assert.equal(app.press('Enter', { target: answerTarget }), true);
+    assert.equal(app.state().currentQuizIdx, 1);
+    assert.deepEqual(app.state().userAnswers, {});
+});
+
+test('missing fourth choice and keys before data is loaded do nothing', async () => {
+    const app = visit();
+    app.run('bindEvents()');
+    assert.equal(app.press('a'), false);
+    assert.equal(app.press('ArrowRight'), false);
+    await app.run('refreshSubjects()');
+    assert.equal(app.press('d'), false);
+    assert.deepEqual(app.state().userAnswers, {});
 });

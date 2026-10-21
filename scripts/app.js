@@ -36,6 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function bindEvents() {
+    document.addEventListener('keydown', handleQuizShortcut);
     const actions = {
         'toggle-subject': () => toggleSubjectDropdown(),
         'open-subject': () => toggleSubjectDropdown(true),
@@ -60,6 +61,33 @@ function bindEvents() {
     document.getElementById('items-per-page').addEventListener('change', event => {
         changeItemsPerPage(event.target.value);
     });
+}
+
+function handleQuizShortcut(event) {
+    if (event.defaultPrevented || event.repeat || event.isComposing || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (!quizData || activeView !== 'quiz' || quizCompleted) return;
+    if (document.getElementById('quiz-view').classList.contains('hidden') ||
+        document.getElementById('quiz-active-card').classList.contains('hidden') ||
+        !document.getElementById('subject-dropdown').classList.contains('hidden')) return;
+
+    const target = event.target;
+    if (target?.isContentEditable || target?.closest('input, textarea, select, [role="textbox"]')) return;
+    // Preserve native Enter activation for controls such as Shuffle, Restart and tabs.
+    if (event.key === 'Enter' && target?.closest('button, a, [role="button"]') && !target.closest('#quiz-options')) return;
+
+    const answerIndex = ['a', 'b', 'c', 'd'].indexOf(event.key.toLowerCase());
+    if (answerIndex >= 0) {
+        const question = orderedQuestions[currentQuizIdx];
+        if (!question || Object.prototype.hasOwnProperty.call(userAnswers, question.id)) return;
+        // Resolve the visible order each time, including after shuffle or storage restore.
+        const answer = getOrderedAnswers(question)[answerIndex];
+        if (!answer) return;
+        event.preventDefault();
+        selectQuizAnswer(question.id, answer.id, answer.is_correct);
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'Enter') {
+        event.preventDefault();
+        navigateQuiz(event.key === 'ArrowLeft' ? -1 : 1);
+    }
 }
 
 function normalizedText(text) {
@@ -317,8 +345,11 @@ function loadQuizQuestion() {
     const hasAnswered = Object.prototype.hasOwnProperty.call(userAnswers, q.id);
     const selectedAnsId = userAnswers[q.id];
 
-    getOrderedAnswers(q).forEach((ans) => {
+    getOrderedAnswers(q).forEach((ans, index) => {
         const btn = document.createElement("button");
+        const label = String.fromCharCode(65 + index);
+        btn.type = 'button';
+        if (index < 4) btn.setAttribute('aria-keyshortcuts', label);
         btn.className = "w-full text-left p-4 rounded-xl border transition flex items-start gap-3 font-medium text-sm text-ink ";
 
         if (!hasAnswered) {
@@ -337,9 +368,10 @@ function loadQuizQuestion() {
 
         btn.innerHTML = `
             <span class="w-6 h-6 rounded-full border flex items-center justify-center shrink-0 text-xs font-bold mt-0.5 ${hasAnswered && ans.is_correct ? 'bg-brand text-white border-emerald-600' : (hasAnswered && ans.id === selectedAnsId ? 'bg-pink text-white border-rose-600' : 'border-pale bg-white')}">
-                ${hasAnswered && ans.is_correct ? '✓' : (hasAnswered && ans.id === selectedAnsId && !ans.is_correct ? '✕' : '')}
+                ${label}
             </span>
             <span class="flex-grow leading-relaxed">${ans.content}</span>
+            ${hasAnswered && ans.is_correct ? '<span aria-label="Đáp án đúng">✓</span>' : (hasAnswered && ans.id === selectedAnsId ? '<span aria-label="Đáp án sai">✕</span>' : '')}
         `;
         optionsBox.appendChild(btn);
     });

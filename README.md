@@ -19,6 +19,7 @@
 | 📚 **Thư viện bộ đề** | Tìm kiếm và chọn môn học từ dropdown; không cần tải JSON lên bằng tay. |
 | 🔀 **Trộn thẻ** | Chỉ đảo các câu chưa chọn đáp án; giữ nguyên vị trí, đáp án và điểm của các câu đã làm. |
 | 🎯 **Làm bài & chấm điểm** | Chọn đáp án, xem đúng/sai, theo dõi điểm số và tiến độ. |
+| ⌨️ **Phím tắt làm bài** | A–D chọn đáp án theo vị trí hiển thị; ← về câu trước, → hoặc Enter sang câu tiếp theo. |
 | 💾 **Tự lưu tiến độ** | Lưu riêng từng bộ đề bằng localStorage; mở lại để tiếp tục từ câu đang học, giữ đáp án, điểm, thứ tự trộn và màn hình kết quả. |
 | 💡 **Giải thích đáp án** | Xem phần giải thích nếu bộ đề có cung cấp. |
 | ⭐ **Đánh dấu câu hỏi** | Lưu các câu muốn xem lại, kể cả khi đóng rồi mở lại app. |
@@ -46,6 +47,8 @@ Giao diện lấy cảm hứng từ pixel art, với linh vật ong nhỏ và b�
 5. Chuyển sang Tất cả câu hỏi để tìm kiếm, lọc và xem đáp án.
 
 Tiến độ tự lưu trên cùng trình duyệt và thiết bị sau mỗi thao tác học. Chuyển môn rồi quay lại vẫn tiếp tục được bài đang làm. Nút Làm lại bắt đầu lượt mới cho bộ đề hiện tại và giữ các câu đã đánh dấu. Xóa dữ liệu trang web trong trình duyệt sẽ xóa tiến độ đã lưu.
+
+Khi làm bài, dùng A, B, C, D để chọn đáp án thứ nhất đến thứ tư đang hiển thị. Nhãn luôn đi theo vị trí sau khi trộn, kể cả khi khôi phục từ localStorage. Chọn bằng phím cũng tự lưu như click chuột. Phím tắt tạm ngừng khi gõ vào ô nhập liệu, mở danh sách môn, xem tất cả câu hỏi hoặc xem kết quả.
 
 🧩 Thêm bộ đề mới
 BeeQuiz là website tĩnh, không cần backend. Danh sách môn học được tạo tự động khi deploy thông qua GitHub Actions; trình duyệt tải danh mục và dữ liệu bằng JavaScript.
