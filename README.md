@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://twoofwn.github.io/BeeQuiz/">
-    <img src="./bee-pixel-logo.svg" alt="BeeQuiz — Pixel bee quiz app" width="100%" />
+    <img src="./bee-pixel-logo.svg" alt="BeeQuiz — Pixel bee quiz app" width="10%" />
   </a>
 
   <h3>🐝 Học một chút, nhớ thật lâu.</h3>
