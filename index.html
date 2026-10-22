@@ -100,7 +100,6 @@
                     <button id="review-starred-btn" type="button" data-action="review-starred" class="subtle-btn" disabled>Hái sao (0)</button>
                     <button id="return-main-btn" type="button" data-action="return-main" class="subtle-btn hidden">Quay lại bài chính</button>
                 </div>
-                <p id="review-mode-label" class="text-xs text-muted mt-2" role="status" aria-live="polite">Bài học chính</p>
             </div>
             <div id="quiz-active-card"
                 class="quiz-main-card bg-white rounded-2xl shadow-md border border-pale p-6 md:p-8 max-w-3xl mx-auto">
@@ -118,8 +117,10 @@
                 <!-- Tiến trình -->
                 <div class="flex justify-between items-center mb-4 text-sm font-medium text-muted">
                     <span id="quiz-progress-text">Câu 1 / 10</span>
-                    <span id="quiz-score-badge"
-                        class="bg-sky-soft text-brand px-3 py-1 rounded-full text-xs font-semibold">Điểm: 0</span>
+                    <span id="quiz-score-badge" class="bg-sky-soft text-brand px-3 py-1 rounded-full text-xs font-semibold">Điểm: 0</span>
+                    <button id="quiz-bookmark-btn" type="button" data-action="toggle-current-bookmark" class="subtle-btn quiz-bookmark-btn" aria-pressed="false" title="Gắn sao câu này để học lại">
+                        <i class="fa-regular fa-star" aria-hidden="true"></i>
+                    </button>
                 </div>
                 <div class="w-full bg-cream rounded-full h-2 mb-6 overflow-hidden">
                     <div id="quiz-progress-bar" class="bg-brand h-2 rounded-full transition-all duration-300"></div>
@@ -129,9 +130,6 @@
                 <div class="flex flex-col sm:flex-row items-start gap-3 mb-6">
                     <h2 id="quiz-question-title"
                         class="quiz-question w-full sm:w-auto flex-grow text-lg md:text-xl font-semibold text-ink leading-relaxed"></h2>
-                    <button id="quiz-bookmark-btn" type="button" data-action="toggle-current-bookmark" class="subtle-btn quiz-bookmark-btn" aria-pressed="false" title="Gắn sao câu này để học lại">
-                        <i class="fa-regular fa-star" aria-hidden="true"></i><span>Gắn sao</span>
-                    </button>
                 </div>
 
                 <!-- Danh sách đáp án -->

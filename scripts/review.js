@@ -79,22 +79,19 @@ function updateReviewControls() {
     const wrongCount = getWrongQuestions().length;
     const starredCount = getAllQuestions().filter(question => bookmarks.has(question.id)).length;
     const wrongButton = document.getElementById('review-wrong-btn');
-    wrongButton.textContent = `Học các câu bị sai (${wrongCount})`;
+    wrongButton.textContent = `Học các câu sai (${wrongCount})`;
     wrongButton.disabled = wrongCount === 0;
     for (const id of ['review-starred-btn', 'list-review-starred-btn']) {
         const button = document.getElementById(id);
-        button.textContent = `Học câu gắn sao (${starredCount})`;
+        button.textContent = `Hái sao (${starredCount})`;
         button.disabled = starredCount === 0;
     }
     document.getElementById('return-main-btn').classList.toggle('hidden', !reviewMode);
-    document.getElementById('review-mode-label').textContent = reviewMode
-        ? `${reviewMode === 'wrong' ? 'Đang học lại câu sai' : 'Đang học câu gắn sao'} · ${orderedQuestions.length} câu. Tiến độ bài chính được giữ nguyên.`
-        : 'Bài học chính';
 
     const question = orderedQuestions[currentQuizIdx];
     const starred = Boolean(question && bookmarks.has(question.id));
     const bookmarkButton = document.getElementById('quiz-bookmark-btn');
     bookmarkButton.setAttribute('aria-pressed', String(starred));
     bookmarkButton.title = starred ? 'Bỏ gắn sao câu này' : 'Gắn sao câu này để học lại';
-    bookmarkButton.innerHTML = `<i class="${starred ? 'fa-solid' : 'fa-regular'} fa-star" aria-hidden="true"></i><span>${starred ? 'Đã gắn sao' : 'Gắn sao'}</span>`;
+    bookmarkButton.innerHTML = `<i class="${starred ? 'fa-solid' : 'fa-regular'} fa-star" aria-hidden="true"></i>`;
 }
