@@ -230,32 +230,9 @@ main {
     position: relative;
 }
 
-main>div:not(.decor-bubble) {
+main>div {
     position: relative;
     z-index: 1;
-}
-
-.decor-bubble {
-    position: fixed;
-    border: 2px solid rgba(118, 192, 236, .38);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.decor-bubble-one {
-    width: 155px;
-    height: 155px;
-    left: -80px;
-    bottom: 9%;
-}
-
-.decor-bubble-two {
-    width: 220px;
-    height: 220px;
-    right: -140px;
-    top: 32%;
-    border-color: rgba(255, 149, 165, .37);
 }
 
 #no-data-notice,

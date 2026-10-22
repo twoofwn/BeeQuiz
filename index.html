@@ -11,9 +11,20 @@
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     <link rel="icon" type="image/svg+xml" href="assets/images/bee-pixel-logo.svg">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/motion.css">
 </head>
 
 <body class="bg-cream text-ink min-h-screen flex flex-col font-sans">
+    <div class="study-background" aria-hidden="true">
+        <svg class="study-doodle doodle-book" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#book"></use></svg>
+        <svg class="study-doodle doodle-atom" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#atom"></use></svg>
+        <svg class="study-doodle doodle-cap" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#cap"></use></svg>
+        <svg class="study-doodle doodle-bulb" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#bulb"></use></svg>
+        <svg class="study-doodle doodle-laptop" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#laptop"></use></svg>
+        <svg class="study-doodle doodle-pen" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#pen"></use></svg>
+        <svg class="study-doodle doodle-microscope" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#microscope"></use></svg>
+        <svg class="study-doodle doodle-flask" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#flask"></use></svg>
+    </div>
 
     <!-- Header Navigation -->
     <header class="app-header bg-brand text-white shadow-lg sticky top-0 z-50">
@@ -72,8 +83,6 @@
 
     <!-- Main Container -->
     <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
-        <div class="decor-bubble decor-bubble-one" aria-hidden="true"></div>
-        <div class="decor-bubble decor-bubble-two" aria-hidden="true"></div>
 
         <!-- Thông báo chưa chọn / tải file JSON -->
         <div id="no-data-notice" class="bg-white rounded-2xl shadow-sm border p-12 text-center my-8">
@@ -252,6 +261,7 @@
 
     <script src="scripts/storage.js" defer></script>
     <script src="scripts/review.js" defer></script>
+    <script src="scripts/motion.js" defer></script>
     <script src="scripts/app.js" defer></script>
 </body>
 

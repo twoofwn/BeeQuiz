@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://twoofwn.github.io/BeeQuiz/">
-    <img src="./assets/images/bee-blink.svg" alt="BeeQuiz — Pixel bee quiz app" width="10%" />
+    <img src="./assets/images/bee-blink.svg" alt="BeeQuiz — Pixel bee quiz app" width="20%" />
   </a>
 
   <h3>🐝 Học một chút, nhớ thật lâu.</h3>
@@ -28,9 +28,6 @@
 | 📱 **Responsive** | Dùng được trên điện thoại lẫn máy tính. |
 
 
-
-Vào học ngay: Mở BeeQuiz →
-
 🎨 Brand palette
 <div align="center">
   <img src="https://img.shields.io/badge/Deep_Blue-%23425B9A-425B9A?style=for-the-badge&labelColor=425B9A" alt="Deep Blue #425B9A" />
@@ -40,7 +37,9 @@ Vào học ngay: Mở BeeQuiz →
 </div>
 
 Giao diện lấy cảm hứng từ pixel art, với linh vật ong nhỏ và bốn màu nhận diện: #425B9A · #76C0EC · #FFF6DC · #FF95A5.
+
 🚀 Cách sử dụng
+
 1. Truy cập BeeQuiz.
 2. Tìm tên hoặc mã môn trong dropdown bộ đề.
 3. Chọn bộ đề, bắt đầu làm bài và xem giải thích sau khi trả lời.
@@ -51,9 +50,10 @@ Tiến độ tự lưu trên cùng trình duyệt và thiết bị sau mỗi tha
 
 Khi làm bài, dùng A, B, C, D để chọn đáp án thứ nhất đến thứ tư đang hiển thị. Nhãn luôn đi theo vị trí sau khi trộn, kể cả khi khôi phục từ localStorage. Chọn bằng phím cũng tự lưu như click chuột. Phím tắt tạm ngừng khi gõ vào ô nhập liệu, mở danh sách môn, xem tất cả câu hỏi hoặc xem kết quả.
 
-Nhấn **Gắn sao** trên câu đang học để lưu câu cần ôn. **Học các câu bị sai** lấy những câu đã chọn sai trong lượt hiện tại; **Học câu gắn sao** lấy các câu đã đánh dấu trong bộ đề. Lượt ôn bắt đầu với đáp án trống, có điểm riêng và không thay đổi kết quả bài chính. Có thể ôn tiếp những câu vẫn sai sau một lượt ôn. Nhấn **Quay lại bài chính** để tiếp tục từ vị trí cũ. Cả bài chính và lượt ôn đang mở đều được tự lưu; bỏ gắn sao trong lượt ôn không làm câu đang học biến mất giữa chừng.
+Nhấn **Gắn sao** trên câu đang học để lưu câu cần ôn. **Học các câu sai** lấy những câu đã chọn sai trong lượt hiện tại; **Hái sao** lấy các câu đã đánh dấu trong bộ đề. Lượt ôn bắt đầu với đáp án trống, có điểm riêng và không thay đổi kết quả bài chính. Có thể ôn tiếp những câu vẫn sai sau một lượt ôn. Nhấn **Quay lại bài chính** để tiếp tục từ vị trí cũ. Cả bài chính và lượt ôn đang mở đều được tự lưu; bỏ gắn sao trong lượt ôn không làm câu đang học biến mất giữa chừng.
 
 🧩 Thêm bộ đề mới
+
 BeeQuiz là website tĩnh, không cần backend. Danh sách môn học được tạo tự động khi deploy thông qua GitHub Actions; trình duyệt tải danh mục và dữ liệu bằng JavaScript.
 
 Đặt file .json vào thư mục data/ (có thể có thư mục con), sau đó commit và push lên nhánh main. Khi workflow deploy hoàn tất, bộ đề mới sẽ xuất hiện trong dropdown.
@@ -78,6 +78,7 @@ Ví dụ cấu trúc JSON:
 Không cần sửa HTML để thêm môn. Lưu ý: GitHub Pages không tự liệt kê file trong thư mục; workflow tạo data/index.json từ các file JSON trong lúc build.
 
 🛠️ Công nghệ
+
 HTML5 · Tailwind CSS · JavaScript (Vanilla JS) · GitHub Pages · GitHub Actions
 
 Cấu trúc mã nguồn:
@@ -97,6 +98,7 @@ data/                          Các bộ câu hỏi JSON
 ```
 
 💻 Chạy ở máy cá nhân
+
 Cần cài Node.js. Tại thư mục gốc dự án:
 ```
 node scripts/generate-catalog.mjs

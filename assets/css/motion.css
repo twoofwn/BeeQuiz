@@ -1,0 +1,223 @@
+:root {
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* A separate, non-interactive layer keeps the study surface still and readable. */
+body {
+    isolation: isolate;
+}
+
+.study-background {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    z-index: -1;
+    color: #6c86ad;
+}
+
+.study-doodle {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    opacity: .14;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: doodle-drift var(--duration, 24s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+.doodle-book {
+    --size: clamp(96px, 10vw, 148px);
+    --tilt: -14deg;
+    --drift: 12px;
+    --duration: 25s;
+    --delay: -8s;
+    left: 3%;
+    top: 19%;
+}
+
+.doodle-atom {
+    --size: clamp(130px, 13vw, 190px);
+    --tilt: -22deg;
+    --drift: -12px;
+    --duration: 29s;
+    --delay: -17s;
+    left: 1%;
+    top: 59%;
+}
+
+.doodle-cap {
+    --size: clamp(100px, 10vw, 142px);
+    --tilt: 13deg;
+    --drift: -15px;
+    --duration: 27s;
+    --delay: -11s;
+    right: 4%;
+    top: 20%;
+}
+
+.doodle-bulb {
+    --size: clamp(92px, 9vw, 132px);
+    --tilt: -12deg;
+    --drift: 10px;
+    --duration: 23s;
+    --delay: -4s;
+    right: 4%;
+    top: 70%;
+}
+
+.doodle-laptop {
+    --size: 72px;
+    --tilt: 12deg;
+    --drift: 14px;
+    --duration: 31s;
+    --delay: -19s;
+    left: 18%;
+    bottom: 5%;
+    opacity: .1;
+}
+
+.doodle-pen {
+    --size: 66px;
+    --tilt: 14deg;
+    --drift: -9px;
+    --duration: 22s;
+    --delay: -13s;
+    left: 16%;
+    top: 42%;
+    opacity: .1;
+}
+
+.doodle-microscope {
+    --size: 90px;
+    --tilt: -17deg;
+    --drift: 10px;
+    --duration: 28s;
+    --delay: -6s;
+    right: 16%;
+    top: 44%;
+    opacity: .11;
+}
+
+.doodle-flask {
+    --size: 68px;
+    --tilt: 12deg;
+    --drift: -10px;
+    --duration: 26s;
+    --delay: -16s;
+    right: 19%;
+    bottom: 3%;
+    opacity: .1;
+}
+
+@keyframes doodle-drift {
+    from { transform: translate3d(0, 0, 0) rotate(var(--tilt)); }
+    to { transform: translate3d(var(--drift), -20px, 0) rotate(calc(var(--tilt) + 8deg)); }
+}
+
+button,
+input,
+select {
+    -webkit-tap-highlight-color: transparent;
+    transition: color .18s ease, background-color .18s ease, border-color .18s ease,
+        box-shadow .22s ease, transform .2s var(--ease-out);
+}
+
+button:not(:disabled):active {
+    transform: translateY(1px) scale(.98);
+}
+
+.bookmark-btn {
+    transform-origin: center;
+}
+
+@media (hover: hover) {
+    .subtle-btn:not(:disabled):hover,
+    .catalog-icon-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(66, 91, 154, .1);
+    }
+
+    .bookmark-btn:hover {
+        transform: rotate(-8deg) scale(1.12);
+    }
+
+    #questions-list-container > div:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 9px 25px rgba(66, 91, 154, .09);
+    }
+}
+
+#questions-list-container > div {
+    transition: border-color .2s ease, box-shadow .24s ease, transform .24s var(--ease-out);
+}
+
+#quiz-options button {
+    transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease,
+        color .2s ease, transform .2s var(--ease-out);
+}
+
+#quiz-options button:not(:disabled):active {
+    transform: translateX(2px) scale(.99);
+}
+
+#quiz-progress-bar {
+    transition: width .45s var(--ease-out);
+}
+
+.subject-trigger .fa-chevron-down {
+    transition: transform .22s var(--ease-out);
+}
+
+.subject-trigger[aria-expanded="true"] .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+#subject-dropdown:not(.hidden) {
+    transform-origin: top center;
+    animation: dropdown-in .2s var(--ease-out) both;
+}
+
+.single-explanation:not(.hidden) {
+    animation: reveal-in .2s var(--ease-out) both;
+}
+
+@keyframes dropdown-in {
+    from { opacity: 0; transform: translateY(-6px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes reveal-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+    .study-doodle { opacity: .1; }
+    .doodle-book { left: -28px; top: 25%; --size: 108px; }
+    .doodle-atom { left: -45px; top: 68%; --size: 145px; }
+    .doodle-cap { right: -22px; top: 36%; --size: 105px; }
+    .doodle-bulb { right: -24px; top: 82%; --size: 102px; }
+    .doodle-laptop, .doodle-pen, .doodle-microscope, .doodle-flask { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+
+    .study-doodle { transform: rotate(var(--tilt)); }
+    button:not(:disabled):active,
+    .bookmark-btn:hover,
+    .subtle-btn:not(:disabled):hover,
+    .catalog-icon-btn:hover,
+    #quiz-options button:not(:disabled):hover,
+    #quiz-options button:not(:disabled):active,
+    #questions-list-container > div:hover { transform: none; }
+}

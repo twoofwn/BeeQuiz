@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import vm from 'node:vm';
 
-const script = readFileSync(new URL('./app.js', import.meta.url), 'utf8');
+const script = ['motion.js', 'app.js'].map(file => readFileSync(new URL(file, import.meta.url), 'utf8')).join('\n');
 
 function session({ answered = {}, index = 0, score = 0, random = 0 } = {}) {
     const status = { textContent: '' };

@@ -305,6 +305,8 @@ function switchView(view) {
     const tabList = document.getElementById("tab-list");
     const quizView = document.getElementById("quiz-view");
     const listView = document.getElementById("list-view");
+    const nextView = view === 'quiz' ? quizView : listView;
+    const entering = nextView.classList.contains('hidden');
 
     if (view === 'quiz') {
         tabQuiz.className = "px-3 py-1.5 rounded-md transition bg-brand text-white shadow";
@@ -317,11 +319,14 @@ function switchView(view) {
         listView.classList.remove("hidden");
         quizView.classList.add("hidden");
     }
+    if (entering) runUiMotion(nextView, [
+        { opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' },
+    ]);
     saveQuizProgress();
 }
 
 /* ==================== QUIZ VIEW LOGIC ==================== */
-function loadQuizQuestion() {
+function loadQuizQuestion(direction = 1) {
     if (!quizData || !orderedQuestions.length) return;
     quizCompleted = false;
 
@@ -395,14 +400,17 @@ function loadQuizQuestion() {
         nextBtn.innerHTML = `Câu tiếp theo <i class="fa-solid fa-arrow-right ml-1"></i>`;
     }
     updateReviewControls();
+    animateQuestion(direction);
 }
 
 function selectQuizAnswer(questionId, answerId, isCorrect) {
     if (Object.prototype.hasOwnProperty.call(userAnswers, questionId)) return;
     userAnswers[questionId] = answerId;
     if (isCorrect) quizScore++;
-    loadQuizQuestion();
+    loadQuizQuestion(0);
     saveQuizProgress();
+    const question = orderedQuestions[currentQuizIdx];
+    if (question?.id === questionId) animateAnswer(question, answerId, isCorrect);
 }
 
 function showQuizResult() {
@@ -414,6 +422,10 @@ function showQuizResult() {
         : 'Hoàn thành bài tập!';
     document.getElementById("quiz-result-summary").textContent = `Bạn đã hoàn thành đúng ${quizScore} / ${total} câu hỏi (${Math.round((quizScore / total) * 100)}%).`;
     updateReviewControls();
+    runUiMotion(document.getElementById('quiz-result-card'), [
+        { opacity: 0, transform: 'translateY(12px) scale(.98)' },
+        { opacity: 1, transform: 'translateY(0) scale(1)' },
+    ], { duration: 340 });
 }
 
 function navigateQuiz(step) {
@@ -425,7 +437,7 @@ function navigateQuiz(step) {
         return;
     }
     currentQuizIdx = Math.max(0, currentQuizIdx + step);
-    loadQuizQuestion();
+    loadQuizQuestion(step);
     saveQuizProgress();
 }
 
@@ -486,7 +498,7 @@ function shuffleAndRestart() {
 }
 
 /* ==================== LIST VIEW & FILTER LOGIC ==================== */
-function applyFilters() {
+function applyFilters(animate = true) {
     if (!quizData) return;
 
     const searchQuery = document.getElementById("filter-search").value.toLowerCase().trim();
@@ -504,10 +516,10 @@ function applyFilters() {
     });
 
     currentPage = 1;
-    renderQuestionList();
+    renderQuestionList(animate !== false);
 }
 
-function renderQuestionList() {
+function renderQuestionList(animate = false) {
     const container = document.getElementById("questions-list-container");
     container.innerHTML = "";
 
@@ -580,6 +592,9 @@ function renderQuestionList() {
     });
 
     renderPagination(total);
+    if (animate) runUiMotion(container, [
+        { opacity: 0, transform: 'translateY(7px)' }, { opacity: 1, transform: 'translateY(0)' },
+    ]);
 }
 
 function toggleBookmark(qId) {
@@ -588,9 +603,14 @@ function toggleBookmark(qId) {
     } else {
         bookmarks.add(qId);
     }
-    applyFilters();
+    applyFilters(false);
     updateReviewControls();
     saveQuizProgress();
+    if (orderedQuestions[currentQuizIdx]?.id === qId) runUiMotion(document.getElementById('quiz-bookmark-btn'), [
+        { transform: 'scale(.85) rotate(-12deg)' },
+        { transform: 'scale(1.2) rotate(8deg)' },
+        { transform: 'scale(1) rotate(0)' },
+    ], { duration: 320 });
 }
 
 function toggleAllAnswers() {
@@ -617,7 +637,7 @@ function toggleSingleAnswer(btn) {
 function changeItemsPerPage(val) {
     itemsPerPage = parseInt(val);
     currentPage = 1;
-    renderQuestionList();
+    renderQuestionList(true);
 }
 
 function renderPagination(totalItems) {
@@ -632,7 +652,7 @@ function renderPagination(totalItems) {
     prevBtn.className = "px-3 py-1.5 rounded-lg border text-xs font-medium bg-white text-muted hover:bg-softcream disabled:opacity-40";
     prevBtn.disabled = currentPage === 1;
     prevBtn.innerHTML = `<i class="fa-solid fa-chevron-left"></i>`;
-    prevBtn.onclick = () => {currentPage--; renderQuestionList();};
+    prevBtn.onclick = () => {currentPage--; renderQuestionList(true);};
     container.appendChild(prevBtn);
 
     // Page numbers
@@ -641,7 +661,7 @@ function renderPagination(totalItems) {
             const pageBtn = document.createElement("button");
             pageBtn.className = `px-3 py-1.5 rounded-lg text-xs font-medium border ${i === currentPage ? 'bg-brand text-white border-brand' : 'bg-white text-muted hover:bg-softcream'}`;
             pageBtn.textContent = i;
-            pageBtn.onclick = () => {currentPage = i; renderQuestionList();};
+            pageBtn.onclick = () => {currentPage = i; renderQuestionList(true);};
             container.appendChild(pageBtn);
         } else if (i === currentPage - 2 || i === currentPage + 2) {
             const dots = document.createElement("span");
@@ -656,6 +676,6 @@ function renderPagination(totalItems) {
     nextBtn.className = "px-3 py-1.5 rounded-lg border text-xs font-medium bg-white text-muted hover:bg-softcream disabled:opacity-40";
     nextBtn.disabled = currentPage === totalPages;
     nextBtn.innerHTML = `<i class="fa-solid fa-chevron-right"></i>`;
-    nextBtn.onclick = () => {currentPage++; renderQuestionList();};
+    nextBtn.onclick = () => {currentPage++; renderQuestionList(true);};
     container.appendChild(nextBtn);
 }
