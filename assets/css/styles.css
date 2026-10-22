@@ -33,6 +33,26 @@
     font-weight: 600;
 }
 
+.subtle-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.review-controls .hidden {
+    display: none;
+}
+
+.quiz-bookmark-btn {
+    flex-shrink: 0;
+    gap: 6px;
+}
+
+.quiz-bookmark-btn[aria-pressed="true"] {
+    color: #b63860;
+    background: #fff0f2;
+    border-color: var(--pink);
+}
+
 :root {
     --brand: #425B9A;
     --sky: #76C0EC;

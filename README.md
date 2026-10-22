@@ -23,6 +23,7 @@
 | 💾 **Tự lưu tiến độ** | Lưu riêng từng bộ đề bằng localStorage; mở lại để tiếp tục từ câu đang học, giữ đáp án, điểm, thứ tự trộn và màn hình kết quả. |
 | 💡 **Giải thích đáp án** | Xem phần giải thích nếu bộ đề có cung cấp. |
 | ⭐ **Đánh dấu câu hỏi** | Lưu các câu muốn xem lại, kể cả khi đóng rồi mở lại app. |
+| 🔁 **Ôn câu sai & Hái sao** | Gắn sao ngay khi làm bài; bắt đầu lượt ôn riêng giữa chừng hoặc sau khi hoàn thành, rồi quay lại đúng tiến độ bài chính. |
 | 🔎 **Tra cứu nhanh** | Tìm theo nội dung câu hỏi/đáp án, lọc câu đã đánh dấu và phân trang. |
 | 📱 **Responsive** | Dùng được trên điện thoại lẫn máy tính. |
 
@@ -49,6 +50,8 @@ Giao diện lấy cảm hứng từ pixel art, với linh vật ong nhỏ và b�
 Tiến độ tự lưu trên cùng trình duyệt và thiết bị sau mỗi thao tác học. Chuyển môn rồi quay lại vẫn tiếp tục được bài đang làm. Nút Làm lại bắt đầu lượt mới cho bộ đề hiện tại và giữ các câu đã đánh dấu. Xóa dữ liệu trang web trong trình duyệt sẽ xóa tiến độ đã lưu.
 
 Khi làm bài, dùng A, B, C, D để chọn đáp án thứ nhất đến thứ tư đang hiển thị. Nhãn luôn đi theo vị trí sau khi trộn, kể cả khi khôi phục từ localStorage. Chọn bằng phím cũng tự lưu như click chuột. Phím tắt tạm ngừng khi gõ vào ô nhập liệu, mở danh sách môn, xem tất cả câu hỏi hoặc xem kết quả.
+
+Nhấn **Gắn sao** trên câu đang học để lưu câu cần ôn. **Học các câu bị sai** lấy những câu đã chọn sai trong lượt hiện tại; **Học câu gắn sao** lấy các câu đã đánh dấu trong bộ đề. Lượt ôn bắt đầu với đáp án trống, có điểm riêng và không thay đổi kết quả bài chính. Có thể ôn tiếp những câu vẫn sai sau một lượt ôn. Nhấn **Quay lại bài chính** để tiếp tục từ vị trí cũ. Cả bài chính và lượt ôn đang mở đều được tự lưu; bỏ gắn sao trong lượt ôn không làm câu đang học biến mất giữa chừng.
 
 🧩 Thêm bộ đề mới
 BeeQuiz là website tĩnh, không cần backend. Danh sách môn học được tạo tự động khi deploy thông qua GitHub Actions; trình duyệt tải danh mục và dữ liệu bằng JavaScript.
@@ -84,9 +87,12 @@ assets/css/styles.css          CSS của ứng dụng
 assets/images/                 Logo và hình ảnh
 scripts/app.js                 Logic và sự kiện giao diện
 scripts/storage.js             Lưu và khôi phục tiến độ học
+scripts/review.js              Ôn câu sai, câu gắn sao và quay lại bài chính
 scripts/generate-catalog.mjs   Tạo danh mục bộ đề
 scripts/shuffle.test.mjs       Kiểm thử logic trộn thẻ
 scripts/progress.test.mjs      Kiểm thử lưu và khôi phục tiến độ
+scripts/review.test.mjs        Kiểm thử lượt ôn và bảo toàn bài chính
+scripts/test-support.mjs       Dữ liệu và môi trường dùng chung cho kiểm thử
 data/                          Các bộ câu hỏi JSON
 ```
 

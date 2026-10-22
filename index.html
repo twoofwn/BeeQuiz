@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeeQuiz – Ôn tập vui hơn mỗi ngày</title>
+    <title>BeeQuiz – Một góc ôn tập nhỏ xinh</title>
     <meta name="theme-color" content="#425B9A">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -94,6 +94,14 @@
 
         <!-- ================= VIEW 1: LÀM BÀI TRẮC NGHIỆM ================= -->
         <div id="quiz-view" class="hidden">
+            <div class="review-controls max-w-3xl mx-auto mb-4">
+                <div class="flex flex-wrap gap-2">
+                    <button id="review-wrong-btn" type="button" data-action="review-wrong" class="subtle-btn" disabled>Học các câu sai (0)</button>
+                    <button id="review-starred-btn" type="button" data-action="review-starred" class="subtle-btn" disabled>Hái sao (0)</button>
+                    <button id="return-main-btn" type="button" data-action="return-main" class="subtle-btn hidden">Quay lại bài chính</button>
+                </div>
+                <p id="review-mode-label" class="text-xs text-muted mt-2" role="status" aria-live="polite">Bài học chính</p>
+            </div>
             <div id="quiz-active-card"
                 class="quiz-main-card bg-white rounded-2xl shadow-md border border-pale p-6 md:p-8 max-w-3xl mx-auto">
                 <div class="quiz-topbar flex flex-wrap justify-between items-center gap-2 mb-5">
@@ -118,8 +126,13 @@
                 </div>
 
                 <!-- Nội dung câu hỏi -->
-                <h2 id="quiz-question-title"
-                    class="quiz-question text-lg md:text-xl font-semibold text-ink leading-relaxed mb-6"></h2>
+                <div class="flex flex-col sm:flex-row items-start gap-3 mb-6">
+                    <h2 id="quiz-question-title"
+                        class="quiz-question w-full sm:w-auto flex-grow text-lg md:text-xl font-semibold text-ink leading-relaxed"></h2>
+                    <button id="quiz-bookmark-btn" type="button" data-action="toggle-current-bookmark" class="subtle-btn quiz-bookmark-btn" aria-pressed="false" title="Gắn sao câu này để học lại">
+                        <i class="fa-regular fa-star" aria-hidden="true"></i><span>Gắn sao</span>
+                    </button>
+                </div>
 
                 <!-- Danh sách đáp án -->
                 <div id="quiz-options" class="space-y-3 mb-6"></div>
@@ -153,7 +166,7 @@
                 <div class="w-40 h-40 bg-sky-soft text-brand rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                     <img src="assets/images/bee-celebrate.svg" alt="BeeQuiz">
                 </div>
-                <h2 class="text-2xl font-bold text-ink mb-2">Hoàn thành bài tập!</h2>
+                <h2 id="quiz-result-title" class="text-2xl font-bold text-ink mb-2">Hoàn thành bài tập!</h2>
                 <p id="quiz-result-summary" class="text-muted mb-6"></p>
                 <div class="flex flex-wrap justify-center gap-3">
                     <button data-action="restart"
@@ -178,9 +191,12 @@
                     <h2 class="text-xl font-bold text-ink">Tất cả câu hỏi <span id="list-count"
                             class="muted-count"></span></h2>
                 </div>
-                <button type="button" data-action="shuffle" class="shuffle-btn"
-                    title="Chỉ trộn các câu chưa chọn đáp án, giữ nguyên tiến độ"><i
-                        class="fa-solid fa-shuffle mr-1.5"></i>Trộn thẻ</button>
+                <div class="flex flex-wrap gap-2">
+                    <button id="list-review-starred-btn" type="button" data-action="review-starred" class="subtle-btn" disabled>Hái sao (0)</button>
+                    <button type="button" data-action="shuffle" class="shuffle-btn"
+                        title="Chỉ trộn các câu chưa chọn đáp án, giữ nguyên tiến độ"><i
+                            class="fa-solid fa-shuffle mr-1.5"></i>Trộn thẻ</button>
+                </div>
             </div>
             <!-- Thanh tìm kiếm & Bộ lọc -->
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-pale space-y-4">
@@ -237,6 +253,7 @@
     </main>
 
     <script src="scripts/storage.js" defer></script>
+    <script src="scripts/review.js" defer></script>
     <script src="scripts/app.js" defer></script>
 </body>
 

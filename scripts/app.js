@@ -12,6 +12,8 @@ let currentQuizIdx = 0;
 let quizScore = 0;
 let userAnswers = {}; // { questionId: selectedAnswerId }
 let quizCompleted = false;
+let reviewMode = null;
+let mainQuizSession = null;
 
 // List View State
 let currentPage = 1;
@@ -49,6 +51,10 @@ function bindEvents() {
         'previous-question': () => navigateQuiz(-1),
         'next-question': () => navigateQuiz(1),
         'toggle-answers': toggleAllAnswers,
+        'review-wrong': () => startReview('wrong'),
+        'review-starred': () => startReview('starred'),
+        'return-main': returnToMainQuiz,
+        'toggle-current-bookmark': toggleCurrentBookmark,
     };
 
     document.querySelectorAll('[data-action]').forEach(button => {
@@ -242,21 +248,19 @@ function initData(data) {
     quizScore = 0;
     userAnswers = {};
     quizCompleted = false;
+    reviewMode = null;
+    mainQuizSession = null;
     activeView = 'quiz';
     const saved = loadStudyProgress(currentQuizPath, data.questionsList, questionRevisions);
     if (saved) {
-        orderedQuestions = saved.orderedQuestions;
-        answerOrder = saved.answerOrder;
-        userAnswers = saved.userAnswers;
+        applyQuizSession(saved);
         bookmarks = saved.bookmarks;
-        currentQuizIdx = saved.currentQuizIdx;
-        quizCompleted = saved.completed;
         activeView = saved.activeView;
-        // Recompute the score from the current answer key instead of trusting saved totals.
-        quizScore = orderedQuestions.filter(question =>
-            Object.prototype.hasOwnProperty.call(userAnswers, question.id) &&
-            question.answersList.some(answer => answer.id === userAnswers[question.id] && answer.is_correct)
-        ).length;
+        if (saved.review) {
+            mainQuizSession = captureQuizSession();
+            reviewMode = saved.review.mode;
+            applyQuizSession(saved.review);
+        }
     }
 
     // Render cả 2 giao diện
@@ -269,14 +273,11 @@ function initData(data) {
 function saveQuizProgress() {
     if (!quizData || !currentQuizPath) return;
     saveStudyProgress(currentQuizPath, {
-        questionIds: orderedQuestions.map(question => question.id),
+        ...serializeQuizSession(mainQuizSession || captureQuizSession()),
         questionRevisions: [...questionRevisions],
-        answerOrder: [...answerOrder].map(([id, answers]) => [id, answers.map(answer => answer.id)]),
-        userAnswers: Object.entries(userAnswers),
         bookmarks: [...bookmarks],
-        currentQuestionId: orderedQuestions[currentQuizIdx]?.id,
-        completed: quizCompleted,
         activeView,
+        review: reviewMode ? { mode: reviewMode, ...serializeQuizSession(captureQuizSession()) } : null,
     });
 }
 
@@ -393,6 +394,7 @@ function loadQuizQuestion() {
     } else {
         nextBtn.innerHTML = `Câu tiếp theo <i class="fa-solid fa-arrow-right ml-1"></i>`;
     }
+    updateReviewControls();
 }
 
 function selectQuizAnswer(questionId, answerId, isCorrect) {
@@ -407,7 +409,11 @@ function showQuizResult() {
     document.getElementById("quiz-active-card").classList.add("hidden");
     document.getElementById("quiz-result-card").classList.remove("hidden");
     const total = orderedQuestions.length;
+    document.getElementById('quiz-result-title').textContent = reviewMode
+        ? (reviewMode === 'wrong' ? 'Hoàn thành ôn câu sai!' : 'Hoàn thành ôn câu gắn sao!')
+        : 'Hoàn thành bài tập!';
     document.getElementById("quiz-result-summary").textContent = `Bạn đã hoàn thành đúng ${quizScore} / ${total} câu hỏi (${Math.round((quizScore / total) * 100)}%).`;
+    updateReviewControls();
 }
 
 function navigateQuiz(step) {
@@ -443,7 +449,7 @@ function fisherYates(items) {
 }
 
 function getOrderedAnswers(question) {
-    return answerOrder.get(String(question.id)) || question.answersList;
+    return answerOrder.get(String(question.id)) || mainQuizSession?.answerOrder.get(String(question.id)) || question.answersList;
 }
 
 function shuffleCards() {
@@ -486,7 +492,7 @@ function applyFilters() {
     const searchQuery = document.getElementById("filter-search").value.toLowerCase().trim();
     const bookmarkFilter = document.getElementById("filter-bookmark").value;
 
-    filteredQuestions = orderedQuestions.filter(q => {
+    filteredQuestions = getAllQuestions().filter(q => {
         // Search filter
         const matchesSearch = q.content.toLowerCase().includes(searchQuery) ||
             q.answersList.some(a => a.content.toLowerCase().includes(searchQuery));
@@ -506,8 +512,8 @@ function renderQuestionList() {
     container.innerHTML = "";
 
     const total = filteredQuestions.length;
-    document.getElementById("filtered-count-text").textContent = `Hiển thị ${total} / ${orderedQuestions.length} câu hỏi`;
-    document.getElementById("list-count").textContent = orderedQuestions.length;
+    document.getElementById("filtered-count-text").textContent = `Hiển thị ${total} / ${getAllQuestions().length} câu hỏi`;
+    document.getElementById("list-count").textContent = getAllQuestions().length;
 
     if (total === 0) {
         container.innerHTML = `
@@ -582,7 +588,8 @@ function toggleBookmark(qId) {
     } else {
         bookmarks.add(qId);
     }
-    renderQuestionList();
+    applyFilters();
+    updateReviewControls();
     saveQuizProgress();
 }
 
