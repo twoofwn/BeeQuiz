@@ -24,7 +24,6 @@ body {
     opacity: .14;
     font-size: var(--size);
     line-height: 1;
-    text-align: center;
     animation: doodle-drift var(--duration, 24s) ease-in-out var(--delay, 0s) infinite alternate;
 }
 
@@ -170,7 +169,7 @@ button:not(:disabled):active {
 }
 
 .header-toggle i {
-    font-size: 24px;
+    font-size: 30px;
     transition: transform .32s var(--ease-out);
 }
 
