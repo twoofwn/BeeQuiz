@@ -27,6 +27,7 @@ let catalogFetchCounter = 0;
 let quizFetchCounter = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
+    initHeader();
     bindEvents();
     document.addEventListener('pointerdown', (event) => {
         if (!document.getElementById('subject-picker').contains(event.target)) closeSubjectDropdown();
@@ -55,6 +56,7 @@ function bindEvents() {
         'review-starred': () => startReview('starred'),
         'return-main': returnToMainQuiz,
         'toggle-current-bookmark': toggleCurrentBookmark,
+        'toggle-header': toggleHeader,
     };
 
     document.querySelectorAll('[data-action]').forEach(button => {
@@ -151,6 +153,7 @@ function updateSelectedSubject() {
 }
 
 function toggleSubjectDropdown(forceOpen = false) {
+    if (document.getElementById('app-header').classList.contains('is-collapsed')) setHeaderCollapsed(false);
     const dropdown = document.getElementById('subject-dropdown');
     const open = forceOpen || dropdown.classList.contains('hidden');
     if (!open) return closeSubjectDropdown();

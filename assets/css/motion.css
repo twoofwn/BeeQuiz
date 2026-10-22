@@ -14,7 +14,7 @@ body {
     pointer-events: none;
     user-select: none;
     z-index: -1;
-    color: #6c86ad;
+    color: #765c2f;
 }
 
 .study-doodle {
@@ -22,11 +22,8 @@ body {
     width: var(--size);
     height: var(--size);
     opacity: .14;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    font-size: var(--size);
+    line-height: 1;
     animation: doodle-drift var(--duration, 24s) ease-in-out var(--delay, 0s) infinite alternate;
 }
 
@@ -133,6 +130,51 @@ button:not(:disabled):active {
 
 .bookmark-btn {
     transform-origin: center;
+}
+
+.app-header {
+    transition: transform .32s var(--ease-out), margin-bottom .32s var(--ease-out);
+}
+
+.app-header.is-collapsed {
+    transform: translateY(-100%);
+    margin-bottom: calc(-1 * var(--header-height));
+}
+
+.header-toggle {
+    position: absolute;
+    z-index: 100;
+    top: 100%;
+    right: 0;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 38px;
+    padding: 0;
+    color: #fff;
+    background: #4c6cad;
+    border: 0;
+    border-radius: 0 0 0 14px;
+    box-shadow: -2px 4px 10px rgba(31, 52, 99, .15);
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.header-toggle:hover {
+    background: #344a7e;
+}
+
+.header-toggle:not(:disabled):active {
+    transform: none;
+}
+
+.header-toggle i {
+    font-size: 30px;
+    transition: transform .32s var(--ease-out);
+}
+
+.is-collapsed .header-toggle i {
+    transform: rotate(180deg);
 }
 
 @media (hover: hover) {

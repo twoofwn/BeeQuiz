@@ -8,6 +8,7 @@
     <meta name="theme-color" content="#425B9A">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css">
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     <link rel="icon" type="image/svg+xml" href="assets/images/bee-pixel-logo.svg">
     <link rel="stylesheet" href="assets/css/styles.css">
@@ -16,19 +17,19 @@
 
 <body class="bg-cream text-ink min-h-screen flex flex-col font-sans">
     <div class="study-background" aria-hidden="true">
-        <svg class="study-doodle doodle-book" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#book"></use></svg>
-        <svg class="study-doodle doodle-atom" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#atom"></use></svg>
-        <svg class="study-doodle doodle-cap" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#cap"></use></svg>
-        <svg class="study-doodle doodle-bulb" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#bulb"></use></svg>
-        <svg class="study-doodle doodle-laptop" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#laptop"></use></svg>
-        <svg class="study-doodle doodle-pen" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#pen"></use></svg>
-        <svg class="study-doodle doodle-microscope" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#microscope"></use></svg>
-        <svg class="study-doodle doodle-flask" viewBox="0 0 96 96" focusable="false"><use href="assets/images/study-doodles.svg#flask"></use></svg>
+        <i class="bx bx-book-open study-doodle doodle-book"></i>
+        <i class="bx bx-atom study-doodle doodle-atom"></i>
+        <i class="bx bx-education study-doodle doodle-cap"></i>
+        <i class="bx bx-light-bulb study-doodle doodle-bulb"></i>
+        <i class="bx bx-laptop study-doodle doodle-laptop"></i>
+        <i class="bx bx-pen study-doodle doodle-pen"></i>
+        <i class="bx bx-microscope study-doodle doodle-microscope"></i>
+        <i class="bx bx-test-tube study-doodle doodle-flask"></i>
     </div>
 
     <!-- Header Navigation -->
-    <header class="app-header bg-brand text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+    <header id="app-header" class="app-header bg-brand text-white shadow-lg sticky top-0 z-50">
+        <div id="header-content" class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
             <div class="brand-lockup flex items-center gap-3">
                 <img src="assets/images/bee-idle-float.svg" class="bee-logo" width="62" height="60"
                     alt="Logo ong pixel của BeeQuiz">
@@ -79,6 +80,10 @@
                 </div>
             </div>
         </div>
+        <button id="header-toggle" type="button" class="header-toggle" data-action="toggle-header"
+            aria-controls="header-content" aria-expanded="true" aria-label="Thu gọn thanh điều hướng" title="Thu gọn thanh điều hướng">
+            <i class="bx bx-chevrons-up" aria-hidden="true"></i>
+        </button>
     </header>
 
     <!-- Main Container -->
@@ -262,6 +267,7 @@
     <script src="scripts/storage.js" defer></script>
     <script src="scripts/review.js" defer></script>
     <script src="scripts/motion.js" defer></script>
+    <script src="scripts/header.js" defer></script>
     <script src="scripts/app.js" defer></script>
 </body>
 

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
-const scripts = ['storage.js', 'review.js', 'motion.js', 'app.js'].map(file => readFileSync(new URL(file, import.meta.url), 'utf8'));
+const scripts = ['storage.js', 'review.js', 'motion.js', 'header.js', 'app.js'].map(file => readFileSync(new URL(file, import.meta.url), 'utf8'));
 export const deck = {
     name: 'Test subject',
     questionsList: Array.from({ length: 4 }, (_, id) => ({
