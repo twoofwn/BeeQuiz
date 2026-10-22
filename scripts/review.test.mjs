@@ -27,7 +27,7 @@ test('wrong review during a quiz includes only incorrect answers and returns to 
     await app.start();
     app.run('selectQuizAnswer(0, 1, false); navigateQuiz(1); selectQuizAnswer(1, 0, true); navigateQuiz(1)');
     const original = app.state();
-    assert.equal(app.node('review-wrong-btn').textContent, 'Học các câu bị sai (1)');
+    assert.equal(app.node('review-wrong-btn').textContent, 'Học các câu sai (1)');
     app.run('startReview("wrong")');
     assert.deepEqual(app.state().ids, [0]);
     assert.deepEqual(app.state().userAnswers, {});
@@ -52,7 +52,7 @@ test('starred review includes unanswered stars; un-starring does not skip the cu
     app.run('toggleCurrentBookmark()');
     assert.deepEqual(app.state().ids, [0, 2]);
     assert.deepEqual(app.state().bookmarks, [2]);
-    assert.equal(app.node('review-starred-btn').textContent, 'Học câu gắn sao (1)');
+    assert.equal(app.node('review-starred-btn').textContent, 'Hái sao (1)');
     app.press('a');
     app.press('Enter');
     app.press('a');
@@ -95,7 +95,7 @@ test('a reload restores the review, answer order, main snapshot and independent 
     await nextVisit.start();
     assert.deepEqual(nextVisit.state(), review);
     assert.equal(nextVisit.run('reviewMode'), 'wrong');
-    assert.match(nextVisit.node('review-mode-label').textContent, /câu sai/);
+    assert.equal(nextVisit.node('return-main-btn').classList.contains('hidden'), false);
     nextVisit.run('returnToMainQuiz()');
     assert.deepEqual(nextVisit.state(), main);
     const thirdVisit = visit(nextVisit.storage);

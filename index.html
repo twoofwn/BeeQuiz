@@ -117,20 +117,20 @@
                 <!-- Tiến trình -->
                 <div class="flex justify-between items-center mb-4 text-sm font-medium text-muted">
                     <span id="quiz-progress-text">Câu 1 / 10</span>
-                    <span id="quiz-score-badge" class="bg-sky-soft text-brand px-3 py-1 rounded-full text-xs font-semibold">Điểm: 0</span>
-                    <button id="quiz-bookmark-btn" type="button" data-action="toggle-current-bookmark" class="subtle-btn quiz-bookmark-btn" aria-pressed="false" title="Gắn sao câu này để học lại">
-                        <i class="fa-regular fa-star" aria-hidden="true"></i>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <span id="quiz-score-badge" class="bg-sky-soft text-brand px-3 py-1 rounded-full text-xs font-semibold">Điểm: 0</span>
+                        <button id="quiz-bookmark-btn" type="button" data-action="toggle-current-bookmark" class="bookmark-btn text-muted-light hover:text-pink text-lg transition" aria-pressed="false" aria-label="Gắn sao câu này" title="Gắn sao câu này để học lại">
+                            <i class="fa-regular fa-star" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="w-full bg-cream rounded-full h-2 mb-6 overflow-hidden">
                     <div id="quiz-progress-bar" class="bg-brand h-2 rounded-full transition-all duration-300"></div>
                 </div>
 
                 <!-- Nội dung câu hỏi -->
-                <div class="flex flex-col sm:flex-row items-start gap-3 mb-6">
-                    <h2 id="quiz-question-title"
-                        class="quiz-question w-full sm:w-auto flex-grow text-lg md:text-xl font-semibold text-ink leading-relaxed"></h2>
-                </div>
+                <h2 id="quiz-question-title"
+                    class="quiz-question w-full text-lg md:text-xl font-semibold text-ink leading-relaxed mb-6"></h2>
 
                 <!-- Danh sách đáp án -->
                 <div id="quiz-options" class="space-y-3 mb-6"></div>

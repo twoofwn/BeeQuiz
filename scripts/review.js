@@ -92,6 +92,8 @@ function updateReviewControls() {
     const starred = Boolean(question && bookmarks.has(question.id));
     const bookmarkButton = document.getElementById('quiz-bookmark-btn');
     bookmarkButton.setAttribute('aria-pressed', String(starred));
+    bookmarkButton.setAttribute('aria-label', starred ? 'Bỏ gắn sao câu này' : 'Gắn sao câu này');
+    bookmarkButton.classList.toggle('text-pink', starred);
     bookmarkButton.title = starred ? 'Bỏ gắn sao câu này' : 'Gắn sao câu này để học lại';
     bookmarkButton.innerHTML = `<i class="${starred ? 'fa-solid' : 'fa-regular'} fa-star" aria-hidden="true"></i>`;
 }
