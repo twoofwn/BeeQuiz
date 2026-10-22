@@ -160,8 +160,19 @@ button:not(:disabled):active {
     touch-action: manipulation;
 }
 
-.header-toggle:hover {
-    background: #344a7e;
+.header-toggle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, #4c6cad 0%, #344a7e 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+
+.header-toggle:hover::before {
+    opacity: 1;
 }
 
 .header-toggle:not(:disabled):active {
@@ -169,6 +180,8 @@ button:not(:disabled):active {
 }
 
 .header-toggle i {
+    position: relative;
+    z-index: 1;
     font-size: 30px;
     transition: transform .32s var(--ease-out);
 }
