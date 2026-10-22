@@ -2,6 +2,15 @@
 <html lang="vi">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SMLN2DY3KG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-SMLN2DY3KG');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BeeQuiz – Một góc ôn tập nhỏ xinh</title>
@@ -62,8 +71,8 @@
                         <div id="subject-empty" class="hidden">Không tìm thấy môn học phù hợp.</div>
                     </div>
                 </div>
-                <button type="button" data-action="refresh-subjects" class="catalog-icon-btn" title="Làm mới danh sách môn"
-                    aria-label="Làm mới danh sách môn">
+                <button type="button" data-action="refresh-subjects" class="catalog-icon-btn"
+                    title="Làm mới danh sách môn" aria-label="Làm mới danh sách môn">
                     <i class="fa-solid fa-rotate"></i>
                 </button>
 
@@ -81,7 +90,8 @@
             </div>
         </div>
         <button id="header-toggle" type="button" class="header-toggle" data-action="toggle-header"
-            aria-controls="header-content" aria-expanded="true" aria-label="Thu gọn thanh điều hướng" title="Thu gọn thanh điều hướng">
+            aria-controls="header-content" aria-expanded="true" aria-label="Thu gọn thanh điều hướng"
+            title="Thu gọn thanh điều hướng">
             <i class="bx bx-chevrons-up" aria-hidden="true"></i>
         </button>
     </header>
@@ -91,7 +101,8 @@
 
         <!-- Thông báo chưa chọn / tải file JSON -->
         <div id="no-data-notice" class="bg-white rounded-2xl shadow-sm border p-12 text-center my-8">
-            <img src="assets/images/bee-blink.svg" width="112" height="102" alt="Ong pixel BeeQuiz" class="pixel-image mx-auto mb-4">
+            <img src="assets/images/bee-blink.svg" width="112" height="102" alt="Ong pixel BeeQuiz"
+                class="pixel-image mx-auto mb-4">
             <p class="eyebrow mb-2">LET'S BUZZ & LEARN</p>
             <h2 id="catalog-notice-title" class="text-2xl font-bold text-ink mb-2">Đang tải các bộ đề...</h2>
             <p id="catalog-notice-text" class="text-muted max-w-md mx-auto mb-6 text-sm">BeeQuiz đang tải danh sách bộ
@@ -110,9 +121,12 @@
         <div id="quiz-view" class="hidden">
             <div class="review-controls max-w-3xl mx-auto mb-4">
                 <div class="flex flex-wrap gap-2">
-                    <button id="review-wrong-btn" type="button" data-action="review-wrong" class="subtle-btn" disabled>Học các câu sai (0)</button>
-                    <button id="review-starred-btn" type="button" data-action="review-starred" class="subtle-btn" disabled>Hái sao (0)</button>
-                    <button id="return-main-btn" type="button" data-action="return-main" class="subtle-btn hidden">Quay lại bài chính</button>
+                    <button id="review-wrong-btn" type="button" data-action="review-wrong" class="subtle-btn"
+                        disabled>Học các câu sai (0)</button>
+                    <button id="review-starred-btn" type="button" data-action="review-starred" class="subtle-btn"
+                        disabled>Hái sao (0)</button>
+                    <button id="return-main-btn" type="button" data-action="return-main" class="subtle-btn hidden">Quay
+                        lại bài chính</button>
                 </div>
             </div>
             <div id="quiz-active-card"
@@ -132,8 +146,11 @@
                 <div class="flex justify-between items-center mb-4 text-sm font-medium text-muted">
                     <span id="quiz-progress-text">Câu 1 / 10</span>
                     <div class="flex items-center gap-3">
-                        <span id="quiz-score-badge" class="bg-sky-soft text-brand px-3 py-1 rounded-full text-xs font-semibold">Điểm: 0</span>
-                        <button id="quiz-bookmark-btn" type="button" data-action="toggle-current-bookmark" class="bookmark-btn text-muted-light hover:text-pink text-lg transition" aria-pressed="false" aria-label="Gắn sao câu này" title="Gắn sao câu này để học lại">
+                        <span id="quiz-score-badge"
+                            class="bg-sky-soft text-brand px-3 py-1 rounded-full text-xs font-semibold">Điểm: 0</span>
+                        <button id="quiz-bookmark-btn" type="button" data-action="toggle-current-bookmark"
+                            class="bookmark-btn text-muted-light hover:text-pink text-lg transition"
+                            aria-pressed="false" aria-label="Gắn sao câu này" title="Gắn sao câu này để học lại">
                             <i class="fa-regular fa-star" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -149,7 +166,8 @@
                 <!-- Danh sách đáp án -->
                 <div id="quiz-options" class="space-y-3 mb-6"></div>
                 <p class="quiz-shortcuts text-xs text-muted mb-5">
-                    <kbd>A</kbd>–<kbd>D</kbd> chọn đáp án · <kbd>←</kbd>/<kbd>→</kbd> chuyển câu · <kbd>Enter</kbd> câu tiếp theo
+                    <kbd>A</kbd>–<kbd>D</kbd> chọn đáp án · <kbd>←</kbd>/<kbd>→</kbd> chuyển câu · <kbd>Enter</kbd> câu
+                    tiếp theo
                 </p>
 
                 <!-- Giải thích & Điều hướng -->
@@ -175,7 +193,8 @@
             <!-- Màn hình hoàn thành -->
             <div id="quiz-result-card"
                 class="hidden bg-white rounded-2xl shadow-md border border-pale p-8 max-w-xl mx-auto text-center">
-                <div class="w-40 h-40 bg-sky-soft text-brand rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <div
+                    class="w-40 h-40 bg-sky-soft text-brand rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                     <img src="assets/images/bee-celebrate.svg" alt="BeeQuiz">
                 </div>
                 <h2 id="quiz-result-title" class="text-2xl font-bold text-ink mb-2">Hoàn thành bài tập!</h2>
@@ -204,7 +223,8 @@
                             class="muted-count"></span></h2>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button id="list-review-starred-btn" type="button" data-action="review-starred" class="subtle-btn" disabled>Hái sao (0)</button>
+                    <button id="list-review-starred-btn" type="button" data-action="review-starred" class="subtle-btn"
+                        disabled>Hái sao (0)</button>
                     <button type="button" data-action="shuffle" class="shuffle-btn"
                         title="Chỉ trộn các câu chưa chọn đáp án, giữ nguyên tiến độ"><i
                             class="fa-solid fa-shuffle mr-1.5"></i>Trộn thẻ</button>
@@ -216,8 +236,7 @@
                     <!-- Ô Tìm kiếm -->
                     <div class="md:col-span-6 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-muted-light"></i>
-                        <input type="text" id="filter-search"
-                            placeholder="Tìm kiếm nội dung câu hỏi hoặc đáp án..."
+                        <input type="text" id="filter-search" placeholder="Tìm kiếm nội dung câu hỏi hoặc đáp án..."
                             class="w-full pl-10 pr-4 py-2 bg-softcream border border-pale rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky">
                     </div>
 
@@ -244,8 +263,7 @@
                     <span id="filtered-count-text">Hiển thị 0 / 0 câu hỏi</span>
                     <div class="flex items-center gap-2">
                         <span>Hiển thị mỗi trang:</span>
-                        <select id="items-per-page"
-                            class="bg-cream border border-pale rounded px-2 py-0.5 text-xs">
+                        <select id="items-per-page" class="bg-cream border border-pale rounded px-2 py-0.5 text-xs">
                             <option value="5">5</option>
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
