@@ -1,0 +1,3326 @@
+{
+  "name": "PRM393 - Flutter PT3 practice (Modules 7-12)",
+  "questionsList": [
+    {
+      "id": 1,
+      "content": "[M7] In Flutter, what must a FormField validator return when the input is VALID?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The input value itself",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "null",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "true",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "An empty string ''",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The validator signature is String? Function(String?). Returning null means 'no error'. Any non-null String (even '') is treated as an error message."
+    },
+    {
+      "id": 2,
+      "content": "[M7] A developer writes this validator:\n\nvalidator: (v) => (v == null || v.isEmpty) ? 'Required' : '',\n\nThe user fills the field correctly and taps Submit. What happens?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The app crashes with a null-check exception",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "A compile-time error occurs because '' is not a valid return type",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "validate() returns true because an empty string means no message",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "validate() returns false: '' is a non-null error text, so the field is still marked as having an error",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Classic trap. FormFieldState.hasError checks errorText != null. An empty string is NOT null, so the field is considered invalid (red border, no visible message) and the form never submits. A valid input must return null."
+    },
+    {
+      "id": 3,
+      "content": "[M7] What is the main difference between TextField and TextFormField?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "TextFormField cannot use a TextEditingController",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "TextField can only be used inside a Form",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "TextFormField is a FormField: it works inside a Form and supports validator, onSaved and reset",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "TextFormField supports obscureText while TextField does not",
+          "is_correct": false
+        }
+      ],
+      "explanation": "TextFormField wraps a TextField inside a FormField, so the parent Form can call validate(), save() and reset() on it. TextField alone has no validator."
+    },
+    {
+      "id": 4,
+      "content": "[M7] Which type should the key passed to a Form widget have, so you can call validate()?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "GlobalKey<FormFieldState>",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "UniqueKey()",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "GlobalKey<FormState>",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "ValueKey<Form>",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Form's state class is FormState. A GlobalKey<FormState> gives access to formKey.currentState!.validate()/save()/reset()."
+    },
+    {
+      "id": 5,
+      "content": "[M7] What does formKey.currentState!.save() do?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Writes the form values to SharedPreferences",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Validates all fields, then saves only the valid ones",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Sends the form data to the server",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Calls the onSaved callback of every FormField in the form, without validating",
+          "is_correct": true
+        }
+      ],
+      "explanation": "save() only triggers onSaved on each field. It does not validate - that is why the standard flow is: if (validate()) { save(); ... }."
+    },
+    {
+      "id": 6,
+      "content": "[M7] What is the correct, standard submit flow?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "formKey.currentState!.reset(); if (formKey.currentState!.validate()) { /* send */ }",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Send the data first, then call validate() to display server errors",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "if (formKey.currentState!.validate()) { formKey.currentState!.save(); /* send data */ }",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "formKey.currentState!.save(); formKey.currentState!.validate(); /* send data */",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Validate first; only if all fields are valid, save the values and send them. Calling save() first would store possibly invalid data; reset() would wipe the user's input."
+    },
+    {
+      "id": 7,
+      "content": "[M7] Which AutovalidateMode is generally recommended for the best user experience?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "AutovalidateMode.disabled",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "AutovalidateMode.onSubmitOnly",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "AutovalidateMode.always",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "AutovalidateMode.onUserInteraction",
+          "is_correct": true
+        }
+      ],
+      "explanation": "onUserInteraction validates a field only after the user has interacted with it - errors appear neither too early (always: the form is red as soon as it opens) nor too late (disabled: only after Submit). 'onSubmitOnly' does not exist (Flutter does have onUnfocus in newer versions)."
+    },
+    {
+      "id": 8,
+      "content": "[M7] What is the UX problem with AutovalidateMode.always?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Error messages appear immediately when the form opens, before the user has typed anything",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "It only validates the first field",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It disables the Submit button permanently",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Validation never runs until validate() is called",
+          "is_correct": false
+        }
+      ],
+      "explanation": "'always' validates on every build, so an empty, untouched form is already full of red errors - annoying for users."
+    },
+    {
+      "id": 9,
+      "content": "[M7] Which input would PASS this validator even though it is clearly not a real email?\n\nvalidator: (v) {\n  if (v == null || v.isEmpty) return 'Email is required';\n  if (!v.contains('@') || !v.contains('.')) return 'Enter a valid email';\n  return null;\n}",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "(empty string)",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "abc@gmail",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "@.",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "abc.gmail.com",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The check only verifies that '@' and '.' exist somewhere. '@.' contains both, so it passes. 'abc@gmail' lacks '.', 'abc.gmail.com' lacks '@'. This is why a RegExp like ^[\\w.+-]+@[\\w-]+\\.[\\w.]+$ is more reliable."
+    },
+    {
+      "id": 10,
+      "content": "[M7] What does this validator check?\n\nString? validatePassword(String? v) {\n  if (v == null || v.length < 8) return 'At least 8 characters';\n  if (!RegExp(r'[0-9]').hasMatch(v)) return 'Must contain a number';\n  return null;\n}",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Password has at least 8 characters AND contains at least one digit",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Password consists only of digits and has exactly 8 characters",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Password starts with a digit",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Password has at most 8 characters and no digits",
+          "is_correct": false
+        }
+      ],
+      "explanation": "hasMatch(r'[0-9]') returns true if ANY digit appears anywhere in the string. It is not anchored, so it does not require the whole string to be digits."
+    },
+    {
+      "id": 11,
+      "content": "[M7] To implement a 'Confirm password' field, what is the usual way to access the first password's value inside the confirm field's validator?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Read the value from the password field's FocusNode",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Attach a TextEditingController to the password field and compare v with controller.text",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Call formKey.currentState!.save() inside the validator",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Use a second GlobalKey<FormState> for the confirm field",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Validators of different fields cannot see each other directly. A TextEditingController on the password field lets the confirm validator compare: v != _passCtrl.text ? 'Passwords do not match' : null."
+    },
+    {
+      "id": 12,
+      "content": "[M7] Which error message follows good Error-UX guidelines?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "\"You typed it wrong!\" at the top of the screen",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "\"ERROR_400_INVALID_FIELD\" in a popup",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "\"Enter a valid email\" shown directly under the email field",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "\"Form invalid\" in a single SnackBar for all fields",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Good error messages are short, specific to the field, polite, explain how to fix it, and appear inline under the field."
+    },
+    {
+      "id": 13,
+      "content": "[M7] Which call explicitly moves focus to a specific TextFormField that owns _emailFocus?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "FocusScope.of(context).requestFocus(_emailFocus)",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "_emailFocus.dispose()",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "FocusScope.of(context).unfocus()",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "TextInputAction.next(_emailFocus)",
+          "is_correct": false
+        }
+      ],
+      "explanation": "requestFocus(node) gives focus to the field owning that FocusNode - typically used in onFieldSubmitted of the previous field. unfocus() hides the keyboard instead."
+    },
+    {
+      "id": 14,
+      "content": "[M7] What is the common way to dismiss the keyboard when the user taps outside the text fields?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Call setState(() {}) in onTap",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Set textInputAction: TextInputAction.done on the first field",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Wrap the form in a GestureDetector with onTap: () => FocusScope.of(context).unfocus()",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Set obscureText: true on every field",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Removing focus from the current field closes the soft keyboard."
+    },
+    {
+      "id": 15,
+      "content": "[M7] You create FocusNode and TextEditingController objects in a State class. What must you do?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Nothing - Flutter garbage-collects them automatically with no side effects",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Mark them const",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Dispose them in dispose() to avoid memory leaks",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Recreate them inside build() each time",
+          "is_correct": false
+        }
+      ],
+      "explanation": "FocusNode and TextEditingController hold listeners/resources. Call .dispose() on them in the State's dispose() before super.dispose(). Creating them in build() is also wrong: they would be recreated and lose state on every rebuild."
+    },
+    {
+      "id": 16,
+      "content": "[M7] A login form is a Column inside a fixed-height Container. When the keyboard opens, you get 'A RenderFlex overflowed by ... pixels'. What is the best fix?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Increase the font size",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Remove the Form widget and use TextField",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Set resizeToAvoidBottomInset: true AND keep the fixed-height Container",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Make the form scrollable, e.g. wrap it in SingleChildScrollView or use a ListView",
+          "is_correct": true
+        }
+      ],
+      "explanation": "The keyboard shrinks the available height; a non-scrollable Column cannot fit. A scrollable parent lets content scroll instead of overflowing (yellow-black stripes)."
+    },
+    {
+      "id": 17,
+      "content": "[M7] Why is `if (!mounted) return;` needed in this code?\n\nFuture<void> _submit() async {\n  setState(() => _loading = true);\n  final taken = await isEmailTaken(_emailCtrl.text);\n  if (!mounted) return;\n  setState(() => _loading = false);\n}",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It is required for every synchronous function",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It makes the Future run faster",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The user may leave the screen during the await; calling setState/using context on a disposed State throws an error",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "mounted becomes false when the form is invalid",
+          "is_correct": false
+        }
+      ],
+      "explanation": "After an await, the widget may have been removed from the tree. setState() after dispose throws 'setState() called after dispose()'. Checking mounted prevents this (it is also what the lint use_build_context_synchronously asks for)."
+    },
+    {
+      "id": 18,
+      "content": "[M7] How do you DISABLE an ElevatedButton while a request is loading?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "onPressed: _loading ? () {} : _submit",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "onPressed: _loading ? null : _submit",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "enabled: !_loading",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "disabled: _loading",
+          "is_correct": false
+        }
+      ],
+      "explanation": "A Material button is disabled when onPressed is null. An empty function () {} keeps it enabled (it just does nothing), and the button has no 'enabled'/'disabled' property."
+    },
+    {
+      "id": 19,
+      "content": "[M7] What happens if you call _formKey.currentState!.validate() but the key was never passed to a Form widget?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "validate() returns false",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Flutter creates a Form automatically",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "validate() returns true",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "currentState is null, so the ! operator throws a null-check error",
+          "is_correct": true
+        }
+      ],
+      "explanation": "currentState is only non-null while a widget with that key is mounted. Forgetting key: _formKey on the Form is a common source of 'Null check operator used on a null value'."
+    },
+    {
+      "id": 20,
+      "content": "[M7] Which property hides the characters typed into a password field?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "secure: true",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "obscureText: true",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "hidden: true",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "keyboardType: TextInputType.visiblePassword",
+          "is_correct": false
+        }
+      ],
+      "explanation": "obscureText replaces characters with dots. keyboardType only changes the keyboard layout. A show/hide toggle is done by flipping a bool used for obscureText inside setState."
+    },
+    {
+      "id": 21,
+      "content": "[M7] For a server-side check like 'is this email already taken?', what is the recommended order?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Skip local validation because the server will check everything",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Put an await inside the validator function",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Call the server on every keystroke inside the validator and await it",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Run local validation first; only if it passes, call the async check while showing a loader and disabling the button",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Validators are synchronous (they return String?, not Future). Do cheap local checks first, then call the API in the submit handler, with loading state to avoid double submission."
+    },
+    {
+      "id": 22,
+      "content": "[M8] Which HTTP method is used to CREATE a new resource, such as submitting a signup form?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "DELETE",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "POST",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "GET",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "PUT",
+          "is_correct": false
+        }
+      ],
+      "explanation": "GET reads, POST creates/sends data, PUT updates, DELETE removes."
+    },
+    {
+      "id": 23,
+      "content": "[M8] This code always throws 'Failed' even though the post is created on jsonplaceholder. Why?\n\nfinal res = await http.post(Uri.parse('https://jsonplaceholder.typicode.com/posts'), ...);\nif (res.statusCode == 200) return Post.fromJson(jsonDecode(res.body));\nthrow Exception('Failed');",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "POST requests cannot have a body",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "http.post always returns 500",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The server returns 201 Created for a successful POST, not 200",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "jsonDecode cannot parse POST responses",
+          "is_correct": false
+        }
+      ],
+      "explanation": "201 means Created. Checking only == 200 treats a success as failure. A safer check is statusCode >= 200 && statusCode < 300, or the exact code the API documents."
+    },
+    {
+      "id": 24,
+      "content": "[M8] Which status code means the request needs a valid login / token (unauthenticated)?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "404",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "500",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "401",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "201",
+          "is_correct": false
+        }
+      ],
+      "explanation": "401 Unauthorized = not authenticated (missing/expired token). 403 = authenticated but not allowed, 404 = not found, 500 = server error."
+    },
+    {
+      "id": 25,
+      "content": "[M8] Status codes in the 500-599 range indicate:",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "An error on the server side",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "A successful request",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "A redirect",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "An error caused by the client's request",
+          "is_correct": false
+        }
+      ],
+      "explanation": "2xx success, 3xx redirect, 4xx client error (bad data, unauthenticated, not found), 5xx server error."
+    },
+    {
+      "id": 26,
+      "content": "[M8] Does http.get() throw an exception when the server responds with 404?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "No, it returns null",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "No - it returns a Response with statusCode 404; you must check statusCode yourself",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Yes, it always throws HttpException for any non-200 code",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Yes, but only in release mode",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The http package throws only on transport problems (no internet, DNS, timeout...). 4xx/5xx are normal responses. That is why every fetch function checks res.statusCode and throws its own Exception."
+    },
+    {
+      "id": 27,
+      "content": "[M8] What does jsonDecode('[{\"id\":1},{\"id\":2}]') return in Dart?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "List<Post>",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "String",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "List<dynamic> whose elements are Map<String, dynamic>",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Map<String, dynamic>",
+          "is_correct": false
+        }
+      ],
+      "explanation": "A JSON array becomes List<dynamic>; each JSON object becomes Map<String, dynamic>. jsonDecode knows nothing about your model classes - you must map them with fromJson."
+    },
+    {
+      "id": 28,
+      "content": "[M8] What is wrong with this code?\n\nfinal List<dynamic> raw = jsonDecode(res.body);\nfinal List<Post> posts = raw.map((e) => Post.fromJson(e));",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Nothing, the code is correct",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "jsonDecode returns a String here",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Post.fromJson cannot be used inside map()",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "map() returns an Iterable<Post>, not a List<Post>; .toList() is missing",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Iterable.map is lazy and returns an Iterable. Assigning it to List<Post> is a type error. Add .toList()."
+    },
+    {
+      "id": 29,
+      "content": "[M8] In http 1.x, how do you pass the URL to http.get?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "http.get(Url('https://example.com/posts'))",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "http.get('https://example.com/posts')",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "http.get(new URL('https://example.com/posts'))",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "http.get(Uri.parse('https://example.com/posts'))",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Since http 0.13, request methods take a Uri, not a String. Use Uri.parse(...) or Uri.https(host, path)."
+    },
+    {
+      "id": 30,
+      "content": "[M8] The server receives this POST but cannot read the fields. What is the most likely cause?\n\nawait http.post(uri, body: jsonEncode({'title': 'Hi', 'userId': 1}));",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "POST must use http.get instead",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "The body must be a Map, never a String",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "jsonEncode cannot encode int values",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Missing header 'Content-Type': 'application/json' - the body is sent as text/plain",
+          "is_correct": true
+        }
+      ],
+      "explanation": "When body is a String, the http package sends Content-Type text/plain. Many APIs only parse JSON when the header says application/json."
+    },
+    {
+      "id": 31,
+      "content": "[M8] Why do we write `import 'package:http/http.dart' as http;`?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "To enable JSON parsing automatically",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Because the package cannot be imported without 'as'",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "To make requests run on another isolate",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "To prefix the package's functions (http.get, http.post) and avoid name conflicts",
+          "is_correct": true
+        }
+      ],
+      "explanation": "The alias namespaces top-level functions such as get/post/Response so they don't collide with other names and the code is easier to read."
+    },
+    {
+      "id": 32,
+      "content": "[M8] What is the problem with this widget?\n\nWidget build(BuildContext context) {\n  return FutureBuilder<List<Post>>(\n    future: fetchPosts(),\n    builder: (context, snap) { ... },\n  );\n}",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "FutureBuilder cannot take a function call as future",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "fetchPosts() is called on every rebuild, sending repeated requests and resetting to the loading state",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "It is correct and recommended",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "build() cannot contain FutureBuilder",
+          "is_correct": false
+        }
+      ],
+      "explanation": "build() can run many times. Create the Future once (e.g. _future = fetchPosts(); in initState) and pass the stored variable to FutureBuilder."
+    },
+    {
+      "id": 33,
+      "content": "[M8] In a FutureBuilder builder, which check shows a loading spinner while the request is in progress?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "snapshot.hasError == true",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "snapshot.connectionState == ConnectionState.done",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "snapshot.hasData == true",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "snapshot.connectionState == ConnectionState.waiting",
+          "is_correct": true
+        }
+      ],
+      "explanation": "waiting = the Future has not completed. After completion (done), check hasError, then empty data, then render the list."
+    },
+    {
+      "id": 34,
+      "content": "[M8] Which states should a robust API screen handle?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Only error",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Only data",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Only loading and data",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Loading, error (with Retry), empty data, and data",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Real networks fail. Handling loading/empty/error explicitly avoids blank screens and crashes, and a Retry button lets the user recover."
+    },
+    {
+      "id": 35,
+      "content": "[M8] What is the purpose of `factory Post.fromJson(Map<String, dynamic> json)`?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Convert a decoded JSON map into a strongly-typed Post object",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Create a singleton Post",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Convert a Post into a JSON string",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Send a Post to the server",
+          "is_correct": false
+        }
+      ],
+      "explanation": "fromJson builds a typed model so you can write post.title (with IDE autocomplete and type checking) instead of error-prone map['title'] lookups. toJson does the reverse."
+    },
+    {
+      "id": 36,
+      "content": "[M8] The API returns {\"id\": \"15\", \"title\": \"Hi\"} (id as a string). The model is:\n\nclass Post {\n  final int id; final String title;\n  factory Post.fromJson(Map<String, dynamic> j) => Post(id: j['id'], title: j['title']);\n}\nWhat happens?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "A runtime error: type 'String' is not a subtype of type 'int'",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "id becomes null",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "A compile-time error",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Dart automatically converts \"15\" to 15",
+          "is_correct": false
+        }
+      ],
+      "explanation": "json values are dynamic, so the compiler can't catch it; the cast fails at runtime. Use int.parse(j['id'].toString()) or fix the API contract. Always check the real JSON types."
+    },
+    {
+      "id": 37,
+      "content": "[M8] Post has a method Map<String, dynamic> toJson(). What does jsonEncode(post) do?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It returns the string \"Instance of 'Post'\"",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It encodes only the public getters",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It works: jsonEncode automatically calls post.toJson() for objects it cannot encode directly",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "It throws because Post is not a Map",
+          "is_correct": false
+        }
+      ],
+      "explanation": "jsonEncode calls toJson() on non-primitive objects by default. Without toJson() it throws JsonUnsupportedObjectError."
+    },
+    {
+      "id": 38,
+      "content": "[M8] How can you stop waiting forever for a slow server?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Put the request inside setState",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "http.get(uri).timeout(const Duration(seconds: 10)) - throws TimeoutException when exceeded",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Use Future.delayed before the request",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "http.get(uri, timeout: 10)",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Future.timeout completes with a TimeoutException after the duration, which you catch and show a friendly error + Retry."
+    },
+    {
+      "id": 39,
+      "content": "[M8] Parsing a very large JSON payload causes the UI to freeze. What is a recommended fix?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Increase the timeout",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Parse it in a background isolate, e.g. with compute()",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Use await on jsonDecode directly",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Call jsonDecode inside build()",
+          "is_correct": false
+        }
+      ],
+      "explanation": "jsonDecode is synchronous CPU work on the UI isolate - 'await' does not move it to another thread. compute()/Isolate.run run it in another isolate."
+    },
+    {
+      "id": 40,
+      "content": "[M8] What is the main benefit of a Service Layer (ApiService)?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It removes the need for error handling",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It makes HTTP requests faster",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Network logic and base URLs live in one place; screens stay clean and reuse the same methods",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "It replaces the need for model classes",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Separation of concerns: UI calls _api.fetchPosts(); URLs, headers, parsing and error checks are centralized - easier to maintain and to mock in tests."
+    },
+    {
+      "id": 41,
+      "content": "[M8] How does this Retry button work?\n\nTextButton(\n  onPressed: () => setState(() => _future = createPost(_ctrl.text)),\n  child: const Text('Retry'),\n)",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It restarts the whole app",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It does nothing because setState cannot change a Future",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It assigns a NEW Future and rebuilds, so FutureBuilder tracks the new request from the waiting state",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "It re-awaits the old failed Future",
+          "is_correct": false
+        }
+      ],
+      "explanation": "A completed Future cannot be rerun. Creating a new Future and storing it in state makes FutureBuilder show loading again and then the new result."
+    },
+    {
+      "id": 42,
+      "content": "[M8] What do `async` and `await` provide in network code?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Waiting for a Future's result without blocking the UI thread",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Retrying failed requests automatically",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Running the request on a new CPU core automatically",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Making the request synchronous",
+          "is_correct": false
+        }
+      ],
+      "explanation": "await pauses only the async function; the event loop keeps rendering frames. A function that uses await must be marked async and returns a Future."
+    },
+    {
+      "id": 43,
+      "content": "[M9] Which data type can SharedPreferences store directly?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "List<String>",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "A custom User object",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "List<int>",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Map<String, dynamic>",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Supported types: bool, int, double, String, List<String>. For maps/objects, jsonEncode them to a String (for small data) or use a file/SQLite."
+    },
+    {
+      "id": 44,
+      "content": "[M9] Why is `?? false` needed here?\n\n_isDark = prefs.getBool('isDarkMode') ?? false;",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It converts a String to bool",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It is required by SharedPreferences.setBool",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "getBool always returns false first",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "getBool returns bool? - it is null when the key has never been saved (e.g. first launch)",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Reading a missing key returns null. Provide a default value for first launch."
+    },
+    {
+      "id": 45,
+      "content": "[M9] Which storage choice fits best for remembering the dark-mode setting?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "SQLite with a settings table",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "SharedPreferences",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "A remote REST API only",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "A JSON file per setting",
+          "is_correct": false
+        }
+      ],
+      "explanation": "A single small key-value flag is the textbook use case for SharedPreferences."
+    },
+    {
+      "id": 46,
+      "content": "[M9] Is SharedPreferences a secure place to store an auth token?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Yes, it is encrypted by Android and iOS automatically",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "No - data is stored unencrypted; use flutter_secure_storage (Keychain/Keystore) for secrets",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Yes, if the key name starts with 'secure_'",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Yes, but only on the web",
+          "is_correct": false
+        }
+      ],
+      "explanation": "SharedPreferences writes plain XML/plist (or localStorage on web). Tokens and passwords belong in secure storage."
+    },
+    {
+      "id": 47,
+      "content": "[M9] On Flutter Web, shared_preferences stores data in:",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "IndexedDB via sqflite",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Nowhere - it is unsupported",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The browser's localStorage",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "A SQLite file",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The web implementation maps to window.localStorage, so values persist across page reloads in the same browser."
+    },
+    {
+      "id": 48,
+      "content": "[M9] An app calls SharedPreferences before runApp:\n\nvoid main() async {\n  final prefs = await SharedPreferences.getInstance();\n  runApp(MyApp(prefs));\n}\nIt crashes on startup. What is missing?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "A try/catch around runApp",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "WidgetsFlutterBinding.ensureInitialized(); before using the plugin",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "A const before MyApp",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "await before runApp",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Plugins use platform channels, which need the Flutter binding. When you await plugin calls before runApp, call WidgetsFlutterBinding.ensureInitialized() first (same rule for Firebase.initializeApp)."
+    },
+    {
+      "id": 49,
+      "content": "[M9] Which package gives you the app's documents directory to save a notes.json file?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "shared_preferences",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "http",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "dart:convert",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "path_provider (getApplicationDocumentsDirectory())",
+          "is_correct": true
+        }
+      ],
+      "explanation": "path_provider returns platform-specific directories; dart:io File then reads/writes the file, and dart:convert encodes/decodes JSON."
+    },
+    {
+      "id": 50,
+      "content": "[M9] Why does loadNotes() check `if (!await file.exists()) return [];`?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "On the first launch the file does not exist yet; reading it would throw",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "To delete old files",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Because readAsString always returns null",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "To request storage permission",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Always handle 'no file yet' and corrupted files (try/catch returning an empty list) when reading local files."
+    },
+    {
+      "id": 51,
+      "content": "[M9] Which statement about sqflite is correct?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "sqflite is a plugin that bridges Flutter to the SQLite engine; it does not run on Flutter Web",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "sqflite replaces SQL with Dart methods, so SQL is never used",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "sqflite works on Web, Android and iOS out of the box",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "sqflite is a NoSQL database written in Dart",
+          "is_correct": false
+        }
+      ],
+      "explanation": "SQLite is the database engine; sqflite is the Flutter plugin (Android/iOS/macOS). insert/query/update/delete are helpers that generate real SQL; rawQuery runs SQL directly."
+    },
+    {
+      "id": 52,
+      "content": "[M9] SQLite has no boolean column type. How do you store a 'done' flag?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "As INTEGER 0/1 and convert in Dart (done ? 1 : 0, value == 1)",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "As BLOB",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "As BOOLEAN true/false",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "As a Dart bool directly - sqflite converts it",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Store 0/1 and convert when reading/writing."
+    },
+    {
+      "id": 53,
+      "content": "[M9] Which call is safe against SQL injection?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "db.execute('DELETE FROM todos WHERE title = \"$title\"')",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "db.delete('todos', where: 'id = ?', whereArgs: [id])",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "db.delete('todos', where: 'id = ' + id.toString())",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "db.rawDelete('DELETE FROM todos WHERE id = $id')",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Placeholders (?) with whereArgs let SQLite bind values safely. String interpolation inserts user input into the SQL text itself."
+    },
+    {
+      "id": 54,
+      "content": "[M9] Version 1 of your DB was created with onCreate. In version 2 you add a 'priority' column to the CREATE TABLE in onCreate. Existing users' apps then crash with 'no such column: priority'. Why?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "onCreate runs only when the database file is first created; you must bump version and add the column in onUpgrade",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "sqflite caches queries forever",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "You must uninstall Flutter and reinstall it",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "SQLite does not support new columns",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Existing installs already have the .db file, so onCreate is skipped. Migrations go in onUpgrade (e.g. ALTER TABLE todos ADD COLUMN priority INTEGER) with version: 2."
+    },
+    {
+      "id": 55,
+      "content": "[M9] What does db.insert('todos', {...}) return?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The id (rowid) of the inserted row",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "The number of rows in the table",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The inserted Map",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "true/false",
+          "is_correct": false
+        }
+      ],
+      "explanation": "insert returns the new row id; update and delete return the number of affected rows."
+    },
+    {
+      "id": 56,
+      "content": "[M9] What happens here?\n\nfinal rows = await db.query('todos');\nrows[0]['done'] = 1;",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It is a compile-time error",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It throws, because the maps returned by query() are read-only",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "It updates only the in-memory copy safely",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "It updates the database row",
+          "is_correct": false
+        }
+      ],
+      "explanation": "sqflite returns read-only maps. Copy first (Map.of(rows[0])) or, better, convert to a model, and use db.update() to change the database."
+    },
+    {
+      "id": 57,
+      "content": "[M9] What is the correct order of clauses in a SELECT statement?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "SELECT ... FROM ... HAVING ... WHERE ... LIMIT",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "SELECT ... FROM ... ORDER BY ... WHERE ... LIMIT",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "SELECT ... WHERE ... FROM ... ORDER BY ... GROUP BY",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY ... LIMIT ... OFFSET",
+          "is_correct": true
+        }
+      ],
+      "explanation": "WHERE filters rows before grouping, HAVING filters groups, ORDER BY sorts, LIMIT/OFFSET paginate."
+    },
+    {
+      "id": 58,
+      "content": "[M9] What does this query return?\n\nSELECT title, done FROM todos WHERE done = 0 ORDER BY id DESC LIMIT 10;",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The 10 oldest finished todos",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "All todos, sorted by title",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The 10 newest unfinished todos (title and done columns)",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "The first 10 todos regardless of status",
+          "is_correct": false
+        }
+      ],
+      "explanation": "done = 0 -> unfinished; ORDER BY id DESC -> newest first (autoincrement id); LIMIT 10 -> at most 10 rows."
+    },
+    {
+      "id": 59,
+      "content": "[M9] In a list of todos using Dismissible, the developer writes key: ValueKey(index). After swiping an item away, the wrong item sometimes disappears or an error 'A dismissed Dismissible widget is still part of the tree' appears. Why?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The key must identify the data item (e.g. ValueKey(todo.id)), not its position, which shifts after removal",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "setState must not be called in onDismissed",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "ValueKey only accepts strings",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Dismissible does not support keys",
+          "is_correct": false
+        }
+      ],
+      "explanation": "After removing item i, the next item gets index i and the same key, confusing Flutter's element matching. Use a stable unique id and remove the item from the data in onDismissed."
+    },
+    {
+      "id": 60,
+      "content": "[M9] What does 'offline-first' mean?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Save and read data locally first so the app works without network, then sync with the server when online",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "The app disables all network calls",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Data is only stored on the server",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "The app refuses to start without internet",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Flow: save offline -> use offline -> sync online. You must also handle sync conflicts and cache expiration."
+    },
+    {
+      "id": 61,
+      "content": "[M9] Which storage best fits a todo app with thousands of items, filtering and sorting?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "SharedPreferences",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Static variables",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "SQLite (sqflite)",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "A single JSON string in SharedPreferences",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Structured, large data with queries (WHERE/ORDER BY/LIMIT) is what a relational database is for."
+    },
+    {
+      "id": 62,
+      "content": "[M9] Why does the demo use a FakePrefs / FakeDatabase class on DartPad?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "DartPad cannot run native plugins like shared_preferences or sqflite; the fake keeps data in memory (lost on reload)",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Because FakePrefs is faster than SharedPreferences in production",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Because DartPad blocks all Dart classes",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Because it encrypts data",
+          "is_correct": false
+        }
+      ],
+      "explanation": "A fake with the same API lets you practice the logic (CRUD, load/save flow) without device storage."
+    },
+    {
+      "id": 63,
+      "content": "[M10] What is the difference between authentication and authorization?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Authentication decides permissions; authorization checks the password",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Authentication verifies WHO you are; authorization decides WHAT you are allowed to do",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "They are the same thing",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Authorization happens before authentication",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Login proves identity (authentication). Being able to open the admin page depends on your role (authorization)."
+    },
+    {
+      "id": 64,
+      "content": "[M10] Which statement about a JWT's payload is TRUE?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It is hashed and cannot be decoded",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It is only Base64URL-encoded and signed, so anyone holding the token can read it",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "It is encrypted, so storing the password inside is safe",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "It can only be read by the server",
+          "is_correct": false
+        }
+      ],
+      "explanation": "A JWT (header.payload.signature) is signed, not encrypted. Never put passwords or sensitive data in the payload."
+    },
+    {
+      "id": 65,
+      "content": "[M10] What is the purpose of the JWT signature?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "To hide the payload content",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "To let the server verify the token was issued by it and has not been modified",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "To store the user's password",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "To compress the token",
+          "is_correct": false
+        }
+      ],
+      "explanation": "If someone edits the payload (e.g. role=admin), the signature no longer matches and the server rejects it."
+    },
+    {
+      "id": 66,
+      "content": "[M10] What is a refresh token used for?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Obtaining a new short-lived access token when the old one expires, without logging in again",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Refreshing the UI after login",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Encrypting the access token",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Replacing the password on every request",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Access tokens are short-lived and sent on each request; refresh tokens are long-lived and only used to get new access tokens."
+    },
+    {
+      "id": 67,
+      "content": "[M10] How is an access token usually sent to a protected API?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Inside the URL path",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "In the request body of every GET request",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "In the header: Authorization: Bearer <token>",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "As a query parameter ?password=...",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The Bearer scheme in the Authorization header is the standard. Putting tokens in URLs leaks them into logs and history."
+    },
+    {
+      "id": 68,
+      "content": "[M10] Why is token-based auth called 'stateless'?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Tokens never expire",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "The server doesn't need to store a session; each request carries a token it can verify",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "The client stores no data at all",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "It does not use HTTP",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Because the token is self-contained and signed, any server instance can verify it - convenient for mobile and web clients."
+    },
+    {
+      "id": 69,
+      "content": "[M10] After a successful login, why use Navigator.pushReplacementNamed(context, '/home') instead of pushNamed?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It replaces the Login route, so pressing Back does not return to the login screen",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "pushNamed cannot open named routes",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It is faster to animate",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "It automatically saves the token",
+          "is_correct": false
+        }
+      ],
+      "explanation": "pushNamed keeps Login in the stack. Replacement removes it, which is the expected flow Splash -> Login -> Home (and Home -> Login on logout)."
+    },
+    {
+      "id": 70,
+      "content": "[M10] In the auto-login flow, what does the SplashScreen do?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Calls the signup API",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Always shows the login form",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Reads the saved token; if it exists go to Home, otherwise go to Login",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Deletes the token on each launch",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Splash is a decision point: token present -> Home, missing/expired -> Login. Logout clears the token."
+    },
+    {
+      "id": 71,
+      "content": "[M10] When should the app end the session and send the user back to Login?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Whenever the app goes to the background",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Only when the app is reinstalled",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "On every 404 response",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "On logout, when the token expires, or when the API returns 401 Unauthorized",
+          "is_correct": true
+        }
+      ],
+      "explanation": "401 means the server no longer accepts the token. Clear it (or try refresh) and redirect to Login."
+    },
+    {
+      "id": 72,
+      "content": "[M10] Why is this AuthService written as a singleton?\n\nstatic final AuthService _instance = AuthService._();\nAuthService._();\nfactory AuthService() => _instance;",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It encrypts the token",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It makes login requests run in parallel",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Every AuthService() call returns the same instance, so the token is shared across the whole app",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "factory constructors create a new object each time",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The private named constructor prevents outside instantiation; the factory always returns _instance."
+    },
+    {
+      "id": 73,
+      "content": "[M10] In the signup handler, what is risky about this code?\n\n} catch (e) {\n  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));\n}",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "ScaffoldMessenger only works in initState",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "SnackBar cannot show error messages",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "catch cannot catch Exceptions",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "context is used after an await without checking mounted - the screen might already be disposed",
+          "is_correct": true
+        }
+      ],
+      "explanation": "The catch block runs after the awaited signup call. Add `if (!mounted) return;` before using context (lint: use_build_context_synchronously)."
+    },
+    {
+      "id": 74,
+      "content": "[M10] Why does the demo strip 'Exception: ' from e.toString() before showing it?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "To convert the exception into a String error code",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Because toString() returns null",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Because SnackBar cannot display colons",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Exception('Email already exists').toString() returns 'Exception: Email already exists'; the prefix is not user-friendly",
+          "is_correct": true
+        }
+      ],
+      "explanation": "A small but common detail: Exception's toString prepends 'Exception: '. Better still: define a custom exception class with a message field."
+    },
+    {
+      "id": 75,
+      "content": "[M10] Who should hash (and salt) user passwords?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Nobody - store passwords as plain text in the database",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "The JWT signature",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The Flutter app, then store the hash in SharedPreferences",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "The backend server, before storing them",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Send passwords over HTTPS; the server stores only salted hashes. The client never stores the raw password."
+    },
+    {
+      "id": 76,
+      "content": "[M10] Which statement about a mock auth backend is correct?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It is more secure than a real API",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It requires internet access",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It runs locally with predictable results and no network - good for learning and testing, not for production",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "It is the recommended approach for production apps",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Mocks (Future.delayed + hard-coded credentials) avoid network/CORS/TLS issues while learning the UI flow."
+    },
+    {
+      "id": 77,
+      "content": "[M10] main() is:\n\nvoid main() async {\n  await Firebase.initializeApp();\n  runApp(const MyApp());\n}\nThe app crashes immediately. What is missing?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Nothing - the crash is caused by the emulator",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "A const before Firebase",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "WidgetsFlutterBinding.ensureInitialized(); as the first line",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "GoogleSignIn().signIn() before runApp",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Firebase.initializeApp uses platform channels, so the binding must be initialized before it is awaited."
+    },
+    {
+      "id": 78,
+      "content": "[M10] Google Sign-In on Android fails with DEVELOPER_ERROR / the account picker does not work. What is the most common cause?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The Firebase project uses too many users",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "The app is missing the http package",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The SHA-1 (and SHA-256) fingerprint or package name does not match the Firebase project configuration",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "The device has dark mode enabled",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Register the correct SHA fingerprints (debug AND release keystores) and the exact package name, then re-download google-services.json and rebuild."
+    },
+    {
+      "id": 79,
+      "content": "[M10] Where must google-services.json be placed in a Flutter Android project?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "android/app/",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "assets/",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "lib/",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "android/ (project root)",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The Google Services Gradle plugin looks for it in android/app/."
+    },
+    {
+      "id": 80,
+      "content": "[M10] GoogleSignIn().signIn() returns null. What does it usually mean?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Firebase was initialized twice",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "The token expired",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Login succeeded",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "The user cancelled the account picker (or Play Services is unavailable on the emulator)",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Always handle null: if (account == null) return null;. Use an emulator image with Google Play or a real device."
+    },
+    {
+      "id": 81,
+      "content": "[M10] How does a Firebase app automatically show the right screen when the user is already signed in?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Use a FutureBuilder on Firebase.initializeApp() only",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Save the password in SharedPreferences",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Listen to FirebaseAuth.instance.authStateChanges() with a StreamBuilder",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Call signInWithGoogle() on every launch",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Firebase persists and refreshes the session; authStateChanges emits the current User (or null) and every change."
+    },
+    {
+      "id": 82,
+      "content": "[M10] What is the difference between local and push notifications?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Local notifications are scheduled by the app itself without a server; push notifications are sent from a backend over the internet",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Local notifications require Firebase Cloud Messaging",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "They are identical",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Push notifications work without internet",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Local = like an alarm you set yourself. Push = a message someone else sends via a server (e.g. FCM)."
+    },
+    {
+      "id": 83,
+      "content": "[M10] On Android 13+, a local notification is never shown although show() runs without error. What is a likely cause?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The POST_NOTIFICATIONS runtime permission was not requested/granted",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "The title is longer than 10 characters",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Notifications only work in debug mode",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "show() must be called inside build()",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Android 13 (API 33) requires a runtime permission for notifications; call requestNotificationsPermission() (and declare it in the manifest)."
+    },
+    {
+      "id": 84,
+      "content": "[M10] Why does AndroidNotificationDetails require a channel id and name ('auth_channel', 'Authentication')?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "To encrypt the notification",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "To send it to the server",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Since Android 8.0, every notification must belong to a channel that users can configure",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "It is only used on iOS",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Channels group notifications; users can mute or change importance per channel in system settings."
+    },
+    {
+      "id": 85,
+      "content": "[M10] Which best practice is correct for auth-related code structure?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Show raw server stack traces to the user",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Keep auth logic in an AuthService and notification logic in a separate NotificationService",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Put HTTP calls directly inside button onPressed in every screen",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Store the password locally to support auto-login",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Single responsibility makes code testable and reusable. Auto-login uses a token, never a stored password."
+    },
+    {
+      "id": 86,
+      "content": "[M11] According to the testing pyramid, which kind of test should you have the MOST of?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Integration tests",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Widget tests",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Manual tests",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Unit tests",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Unit tests are fast, cheap and stable, so they form the wide base. Integration tests are slow and expensive - keep them for critical flows."
+    },
+    {
+      "id": 87,
+      "content": "[M11] What does the AAA pattern stand for?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Async - Await - Assert",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Assign - Animate - Accept",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Arrange - Act - Assert",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Analyze - Apply - Approve",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Prepare data, perform the action, verify the result with expect()."
+    },
+    {
+      "id": 88,
+      "content": "[M11] A bug: the Task.toggle() method does not flip completed. Which test is the best fit?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "A unit test with test()",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "A widget test with pumpAndSettle",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "An integration test on a real device",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "A golden test",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Pure logic with no UI -> unit test: fast and pinpoints the problem."
+    },
+    {
+      "id": 89,
+      "content": "[M11] What is the difference between test() and testWidgets()?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "test() runs on a real device",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "testWidgets() cannot use expect()",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "testWidgets() provides a WidgetTester to build widgets and simulate interactions; test() is for plain Dart logic",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "They are aliases",
+          "is_correct": false
+        }
+      ],
+      "explanation": "testWidgets gives you tester.pumpWidget, tap, enterText, pump, etc."
+    },
+    {
+      "id": 90,
+      "content": "[M11] This widget test fails: 'Buy milk' is not found. Why?\n\nawait tester.enterText(find.byKey(const Key('taskField')), 'Buy milk');\nawait tester.tap(find.byKey(const Key('addButton')));\nexpect(find.text('Buy milk'), findsOneWidget);",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "No tester.pump() after tap, so the UI was never rebuilt with the new state",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "tap() automatically rebuilds, so the bug is elsewhere",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "enterText cannot be used with keys",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "findsOneWidget only works with icons",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Tests don't render frames automatically. After changing state, call await tester.pump() (or pumpAndSettle for animations/navigation)."
+    },
+    {
+      "id": 91,
+      "content": "[M11] What is the difference between pump() and pumpAndSettle()?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "pump() renders one frame; pumpAndSettle() keeps pumping until no more frames are scheduled (animations/navigation finished)",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "pumpAndSettle() renders exactly one frame",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "pump() waits for network calls",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "They are identical",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Use pumpAndSettle after Navigator.push so the route transition completes before asserting."
+    },
+    {
+      "id": 92,
+      "content": "[M11] A test calls await tester.pumpAndSettle() while a CircularProgressIndicator is on screen. What happens?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It fails with 'pumpAndSettle timed out' because the indeterminate animation never ends",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "It hides the indicator automatically",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It waits for the network request to complete",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "It finishes immediately",
+          "is_correct": false
+        }
+      ],
+      "explanation": "An infinite animation always schedules new frames. Use pump() or pump(const Duration(...)) instead in such states."
+    },
+    {
+      "id": 93,
+      "content": "[M11] You pumpWidget(const TaskListScreen()) directly (no MaterialApp). The test throws 'No MediaQuery/Directionality widget found'. Fix?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Wrap it: MaterialApp(home: TaskListScreen()) (plus the required Provider)",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Use test() instead of testWidgets()",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Call pumpAndSettle twice",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Add const to every widget",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Material widgets need ancestors provided by MaterialApp. If the screen uses context.watch/read, wrap it with the ChangeNotifierProvider too, or you get ProviderNotFoundException."
+    },
+    {
+      "id": 94,
+      "content": "[M11] Which matcher means 'at least one widget matches'?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "findsNothing",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "findsWidgets",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "findsOneWidget",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "findsExactly(0)",
+          "is_correct": false
+        }
+      ],
+      "explanation": "findsOneWidget = exactly one, findsNothing = zero, findsWidgets = one or more, findsNWidgets(n) = exactly n."
+    },
+    {
+      "id": 95,
+      "content": "[M11] In the navigation test, after opening the Detail screen:\n\nexpect(find.text('Demo task'), findsWidgets);\nWhy findsWidgets instead of findsOneWidget?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Because the text is inside a TextField",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "findsOneWidget does not work after navigation",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "The list page stays in the widget tree under the detail route, so the title can appear more than once",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "findsWidgets is faster",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Navigator.push keeps the previous route in the tree (offstage). Tricky: findsOneWidget would fail with 'found 2 widgets'."
+    },
+    {
+      "id": 96,
+      "content": "[M11] Why is giving widgets a Key (e.g. Key('addButton')) recommended for tests?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Keys are required for tap()",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "find.byKey locates the exact widget reliably, even when texts or layout change",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Tests cannot find widgets without keys",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Keys make widgets render faster in tests",
+          "is_correct": false
+        }
+      ],
+      "explanation": "find.text/byType can be ambiguous. Stable keys make tests robust."
+    },
+    {
+      "id": 97,
+      "content": "[M11] In a widget test, your screen calls a real API with the http package. What usually happens?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "The request hits the real server normally",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "The test waits forever",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Requests do not reach the network; by default they receive HTTP 400 - you should mock the repository/service",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "The http package is automatically mocked to return 200 with fake data",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The test binding overrides HttpClient to return 400. Inject a fake/mock service instead of relying on the network."
+    },
+    {
+      "id": 98,
+      "content": "[M11] Which package and command run true end-to-end tests on a device/emulator?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "integration_test package; flutter test integration_test",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "flutter_test only; flutter run --test",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "mockito; flutter drive --unit",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "test package; dart run",
+          "is_correct": false
+        }
+      ],
+      "explanation": "integration_test runs the full app on a real device/emulator. Use it sparingly for critical user journeys."
+    },
+    {
+      "id": 99,
+      "content": "[M11] What does the yellow-and-black striped bar on screen indicate?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "A network error",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "That the app is in release mode",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "A layout overflow - a widget exceeds its constraints (e.g. 'RenderFlex overflowed')",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "A missing asset",
+          "is_correct": false
+        }
+      ],
+      "explanation": "It shows in debug mode only - the app does not crash, so it is easy to miss. Fix with Expanded/Flexible, scrolling, or smaller content."
+    },
+    {
+      "id": 100,
+      "content": "[M11] Which DevTools tool helps find WHY a layout overflows?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Widget Inspector",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Network view",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "CPU Profiler only",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "App Size tool",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Widget Inspector shows the widget tree and constraints/sizes; the Performance view shows frame timing."
+    },
+    {
+      "id": 101,
+      "content": "[M11] Which is NOT a recommended testing best practice?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Mock repositories when possible",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Keep tests small and focused on one behavior",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Write tests that re-verify that Flutter's built-in widgets work (e.g. Text renders text)",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Use keys to find widgets",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Don't test the framework - test your own logic and UI behavior."
+    },
+    {
+      "id": 102,
+      "content": "[M11] Why prefer debugPrint over print for logging large outputs?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "print does not work on iOS",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "debugPrint sends logs to the server",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "debugPrint throttles output to avoid Android dropping log lines when printing a lot",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "debugPrint is removed by the compiler in debug mode",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Android's logcat can drop lines if too much is printed at once; debugPrint rate-limits. (Remove noisy logs before release.)"
+    },
+    {
+      "id": 103,
+      "content": "[M12] To render at 60 FPS, how much time does each frame have?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "About 8 ms",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "About 16.6 ms",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "1 second",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "About 60 ms",
+          "is_correct": false
+        }
+      ],
+      "explanation": "1000 ms / 60 = 16.6 ms. At 120 Hz the budget is about 8.3 ms. Exceeding it causes jank."
+    },
+    {
+      "id": 104,
+      "content": "[M12] In which build mode should you measure performance?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Any mode, they perform the same",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Profile mode (flutter run --profile)",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "Release mode with DevTools attached",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Debug mode",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Debug mode uses JIT plus extra checks and is much slower. Profile is close to release but still supports DevTools. Release cannot be profiled."
+    },
+    {
+      "id": 105,
+      "content": "[M12] Match the roles: Widget, Element, RenderObject.",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Widget = paints pixels; Element = stores images; RenderObject = immutable configuration",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Element = network layer",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "All three are the same object",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Widget = immutable configuration; Element = manages lifecycle/state in the tree; RenderObject = layout, paint, composite",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Widgets are cheap blueprints rebuilt often; Elements link widgets to RenderObjects, which do the expensive layout/paint work."
+    },
+    {
+      "id": 106,
+      "content": "[M12] Why does adding const to a widget like `const Text('Task Title')` help?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "const widgets cannot be painted",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It makes the text bold",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It moves the widget to another isolate",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "A const widget is a canonical instance; Flutter can skip rebuilding it because it is identical",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Identical const instances let the framework short-circuit rebuilds and save allocations."
+    },
+    {
+      "id": 107,
+      "content": "[M12] What is wrong with this code (two problems)?\n\nWidget build(BuildContext context) {\n  final sorted = tasks..sort();\n  ...\n}",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "sort() cannot be used in Flutter",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It only fails in release mode",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Nothing - sort() is O(1)",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Sorting runs on every rebuild AND the cascade sorts the original `tasks` list in place",
+          "is_correct": true
+        }
+      ],
+      "explanation": "Heavy work does not belong in build(). Also `tasks..sort()` mutates and returns the same list - it is not a copy. Use [...tasks]..sort() once when data changes."
+    },
+    {
+      "id": 108,
+      "content": "[M12] Which is the most common cause of an entire screen rebuilding when one item changes?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Using const widgets",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Using ListView.builder",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Calling context.watch<TaskProvider>() at the top of a large build method",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Using ValueKey",
+          "is_correct": false
+        }
+      ],
+      "explanation": "watch subscribes the whole widget. Narrow the scope with Selector/Consumer around the part that actually depends on the data."
+    },
+    {
+      "id": 109,
+      "content": "[M12] What does Selector<TaskProvider, List<Task>> provide compared to context.watch<TaskProvider>()?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It rebuilds only when the selected value changes, and only the subtree in its builder",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "It caches network requests",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It is identical to watch",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "It prevents the provider from notifying listeners",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Selector listens to the provider but compares the selected value; unrelated changes don't rebuild its builder."
+    },
+    {
+      "id": 110,
+      "content": "[M12] Inside an onPressed callback, which call should you use to call provider.toggle(id)?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "context.watch<TaskProvider>().toggle(id)",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Provider.of<TaskProvider>(context, listen: true).toggle(id)",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Selector<TaskProvider>().toggle(id)",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "context.read<TaskProvider>().toggle(id)",
+          "is_correct": true
+        }
+      ],
+      "explanation": "read gets the object without subscribing - correct in callbacks. watch (listen: true) is for build methods; using it in a callback throws an error."
+    },
+    {
+      "id": 111,
+      "content": "[M12] Which key choice causes unnecessary rebuilds and loss of state in a list?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "No key on static items",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "const Key('addButton')",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "key: ValueKey(task.id)",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "key: UniqueKey() created inside build",
+          "is_correct": true
+        }
+      ],
+      "explanation": "A new UniqueKey on each build makes Flutter treat the item as a brand new widget every time, discarding its Element and State."
+    },
+    {
+      "id": 112,
+      "content": "[M12] When should you use a GlobalKey?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "On every list item for performance",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "To make widgets rebuild faster",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Instead of const",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Only when really needed (e.g. accessing a widget's state like FormState); it is more expensive than local keys",
+          "is_correct": true
+        }
+      ],
+      "explanation": "GlobalKeys are registered globally and are costly; overusing them hurts performance."
+    },
+    {
+      "id": 113,
+      "content": "[M12] Why is ListView.builder preferred over ListView(children: [...]) for long lists?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It disables scrolling physics",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It does not need itemCount",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It builds items lazily, only those visible (plus a small cache area)",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "It loads all items at once so scrolling is faster",
+          "is_correct": false
+        }
+      ],
+      "explanation": "ListView(children:) creates every child up front, which is slow and memory-hungry for long lists."
+    },
+    {
+      "id": 114,
+      "content": "[M12] What is the benefit of extracting a list item into its own TaskTile widget?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "It removes the need for state management",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "It prevents all rebuilds forever",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Smaller rebuild scope and cleaner code; combined with const and keys it reduces unnecessary work",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "It makes the APK smaller",
+          "is_correct": false
+        }
+      ],
+      "explanation": "A separate widget can rebuild independently, unlike a large inline builder."
+    },
+    {
+      "id": 115,
+      "content": "[M12] A 3000x3000 photo is shown in a 50x50 thumbnail and uses a lot of memory. What helps most?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Wrap the image with const",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Use a GlobalKey on the image",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Decode at a smaller size, e.g. Image.network(url, cacheWidth: 100) or resize/compress the asset",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Call setState more often",
+          "is_correct": false
+        }
+      ],
+      "explanation": "width/height only change display size; the image is still decoded at full resolution. cacheWidth/cacheHeight decode at the target size."
+    },
+    {
+      "id": 116,
+      "content": "[M12] Why should precacheImage(...) be called in didChangeDependencies() rather than initState()?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "precacheImage is only allowed inside build()",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "initState runs after build",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "It needs inherited widgets (e.g. MediaQuery via context), which cannot be used in initState",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "didChangeDependencies runs on a background thread",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Accessing inherited widgets in initState throws. didChangeDependencies runs right after initState and is safe for context-dependent work."
+    },
+    {
+      "id": 117,
+      "content": "[M12] Which command produces a size breakdown (Dart code, native libraries, assets, packages) of your app?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "flutter doctor -v",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "flutter pub deps --size",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "flutter build apk --analyze-size",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "flutter run --profile",
+          "is_correct": false
+        }
+      ],
+      "explanation": "It outputs a JSON report you can open in DevTools' App Size tool."
+    },
+    {
+      "id": 118,
+      "content": "[M12] In pubspec.yaml, `version: 1.0.1+2` means:",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "versionName = 1.0.1 (shown to users), versionCode/build number = 2 (must increase every release)",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "versionName = 2, versionCode = 1.0.1",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Minimum Flutter SDK 1.0.1",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Version 1.0.1 for Android and 2 for iOS",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Google Play rejects an upload whose versionCode is not greater than the previous one."
+    },
+    {
+      "id": 119,
+      "content": "[M12] Which file format does Google Play require for new app uploads?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": ".jar",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Android App Bundle (.aab) via flutter build appbundle --release",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": ".apk via flutter build apk --debug",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": ".ipa",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Play generates optimized APKs per device from the AAB. Debug APKs are large and unsigned for release."
+    },
+    {
+      "id": 120,
+      "content": "[M12] Why is a release build much faster and smaller than a debug build?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "Release uses AOT-compiled native code without debugging/assertions, and tree-shakes unused code",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "Debug mode has no Dart VM",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Release mode disables all images",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "Release mode skips the build() method",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Debug uses JIT for hot reload plus asserts and service extensions, which cost speed and size."
+    },
+    {
+      "id": 121,
+      "content": "[M12] You lose your upload keystore after publishing an app on Google Play. What is the consequence?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "You can no longer sign updates with the original key (unless Play App Signing key reset is possible); always back it up and never commit it",
+          "is_correct": true
+        },
+        {
+          "id": 2,
+          "content": "You can sign with the debug key instead",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Nothing - Flutter regenerates it automatically",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "The app is deleted from Play immediately",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Keystores and key.properties must stay out of Git and be backed up securely."
+    },
+    {
+      "id": 122,
+      "content": "[M12] Which DevTools feature highlights areas of the screen that are being repainted?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "App Size tool",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "Network profiler",
+          "is_correct": false
+        },
+        {
+          "id": 3,
+          "content": "Repaint Rainbow",
+          "is_correct": true
+        },
+        {
+          "id": 4,
+          "content": "Memory view",
+          "is_correct": false
+        }
+      ],
+      "explanation": "Rotating colors on repaint reveal widgets that repaint too often."
+    },
+    {
+      "id": 123,
+      "content": "[M12] Where is the APK produced by `flutter build apk --release`?",
+      "answersList": [
+        {
+          "id": 1,
+          "content": "android/app/release.apk",
+          "is_correct": false
+        },
+        {
+          "id": 2,
+          "content": "build/app/outputs/flutter-apk/app-release.apk",
+          "is_correct": true
+        },
+        {
+          "id": 3,
+          "content": "build/web/app.apk",
+          "is_correct": false
+        },
+        {
+          "id": 4,
+          "content": "lib/release/app.apk",
+          "is_correct": false
+        }
+      ],
+      "explanation": "The AAB from build appbundle goes to build/app/outputs/bundle/release/app-release.aab."
+    }
+  ]
+}
