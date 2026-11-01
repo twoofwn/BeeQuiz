@@ -22,6 +22,10 @@
     <link rel="icon" type="image/svg+xml" href="assets/images/bee-pixel-logo.svg">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/motion.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <!-- Load before first paint so the saved theme is applied without a light flash. -->
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/theme.js"></script>
 </head>
 
 <body class="bg-cream text-ink min-h-screen flex flex-col font-sans">
@@ -74,6 +78,10 @@
                 <button type="button" data-action="refresh-subjects" class="catalog-icon-btn"
                     title="Làm mới danh sách môn" aria-label="Làm mới danh sách môn">
                     <i class="fa-solid fa-rotate"></i>
+                </button>
+                <button type="button" id="theme-toggle" class="catalog-icon-btn theme-toggle"
+                    title="Giao diện: theo hệ thống" aria-label="Đổi giao diện sáng / tối">
+                    <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>
                 </button>
 
                 <!-- Navigation Tabs -->
@@ -282,7 +290,6 @@
 
     </main>
 
-    <script src="scripts/storage.js" defer></script>
     <script src="scripts/review.js" defer></script>
     <script src="scripts/motion.js" defer></script>
     <script src="scripts/header.js" defer></script>

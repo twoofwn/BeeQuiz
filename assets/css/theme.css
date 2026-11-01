@@ -1,0 +1,175 @@
+/* Dark theme: applied via <html data-theme="dark"> by scripts/theme.js. */
+.theme-toggle i {
+    width: 1em;
+    text-align: center;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+    --brand: #4a64a8;
+    --brand-text: #a9c0f5;
+    --sky: #5aaee0;
+    --cream: #19213a;
+    --ink: #e4eaf7;
+    --muted: #a6b2ca;
+    --pale: #34415f;
+    --surface: #1f2843;
+    --surface-soft: #242f4f;
+    --sky-soft: #22385e;
+    --pink-soft: #3c2537;
+}
+
+[data-theme="dark"] body {
+    background: radial-gradient(circle at 8% 27%, rgba(90, 174, 224, .12), transparent 33%), radial-gradient(circle at 95% 75%, rgba(255, 149, 165, .08), transparent 35%), #141a2e;
+}
+
+/* Surfaces */
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] #no-data-notice,
+[data-theme="dark"] #subject-dropdown {
+    background-color: var(--surface) !important;
+}
+
+[data-theme="dark"] .bg-softcream,
+[data-theme="dark"] .hover\:bg-softcream:hover,
+[data-theme="dark"] #subject-search {
+    background-color: var(--surface-soft) !important;
+}
+
+[data-theme="dark"] .bg-sky-soft,
+[data-theme="dark"] .hover\:bg-sky-soft:hover,
+[data-theme="dark"] .muted-count {
+    background-color: var(--sky-soft) !important;
+}
+
+[data-theme="dark"] .bg-pink-soft {
+    background-color: var(--pink-soft) !important;
+}
+
+[data-theme="dark"] .border,
+[data-theme="dark"] .border-t,
+[data-theme="dark"] .border-b,
+[data-theme="dark"] #no-data-notice,
+[data-theme="dark"] .quiz-main-card,
+[data-theme="dark"] #questions-list-container>div,
+[data-theme="dark"] #subject-dropdown,
+[data-theme="dark"] #subject-search {
+    border-color: var(--pale);
+}
+
+[data-theme="dark"] .quiz-topbar {
+    border-bottom-color: var(--pale);
+}
+
+[data-theme="dark"] #no-data-notice,
+[data-theme="dark"] .quiz-main-card,
+[data-theme="dark"] #quiz-result-card,
+[data-theme="dark"] #list-view>div:not(:first-child) {
+    box-shadow: 0 10px 35px rgba(0, 0, 0, .28);
+}
+
+/* Text */
+[data-theme="dark"] .text-brand,
+[data-theme="dark"] .hover\:text-brand:hover,
+[data-theme="dark"] .eyebrow,
+[data-theme="dark"] .muted-count,
+[data-theme="dark"] .subtle-btn {
+    color: var(--brand-text) !important;
+}
+
+[data-theme="dark"] .text-muted-light {
+    color: #7e8aa5 !important;
+}
+
+[data-theme="dark"] .text-pink-dark {
+    color: #ffa3b6 !important;
+}
+
+/* Header */
+[data-theme="dark"] .app-header {
+    background: linear-gradient(105deg, #26335c 0%, #2f4174 100%) !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
+}
+
+[data-theme="dark"] .bg-brand-dark,
+[data-theme="dark"] .hover\:bg-brand-dark:hover {
+    background-color: #1c2747 !important;
+}
+
+[data-theme="dark"] .header-toggle {
+    background: #2f4174;
+}
+
+[data-theme="dark"] .header-toggle::before {
+    background: linear-gradient(180deg, #2f4174 0%, #1c2747 100%);
+}
+
+[data-theme="dark"] .study-background {
+    color: #c7d4f2;
+}
+
+[data-theme="dark"] .study-doodle {
+    opacity: .06;
+}
+
+/* Subject picker */
+[data-theme="dark"] .subject-trigger {
+    color: var(--ink);
+    background: var(--surface);
+    border-color: rgba(255, 255, 255, .14);
+}
+
+[data-theme="dark"] .subject-trigger:hover {
+    background: var(--surface-soft);
+}
+
+[data-theme="dark"] #subject-dropdown {
+    color: var(--ink);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, .45);
+}
+
+[data-theme="dark"] .subject-option:hover,
+[data-theme="dark"] .subject-option:focus-visible {
+    background: var(--sky-soft);
+}
+
+[data-theme="dark"] .subject-option[aria-selected="true"] {
+    background: var(--pink-soft);
+    color: var(--brand-text);
+}
+
+[data-theme="dark"] #subject-empty {
+    color: var(--muted);
+}
+
+/* Quiz */
+[data-theme="dark"] .subtle-btn {
+    background: #233358;
+    border-color: #3a4c78;
+}
+
+[data-theme="dark"] .subtle-btn:hover {
+    background: #2b3e6a;
+}
+
+[data-theme="dark"] .quiz-question {
+    background: linear-gradient(105deg, #2a2f4a, #232b48);
+    border-color: #3d3f5c;
+}
+
+[data-theme="dark"] #quiz-options button:not(:disabled):hover {
+    background: var(--sky-soft) !important;
+}
+
+[data-theme="dark"] #quiz-score-badge {
+    background: var(--pink-soft) !important;
+    color: #ffa3b6 !important;
+}
+
+[data-theme="dark"] #quiz-explanation-box {
+    background: #1d3352 !important;
+}
+
+[data-theme="dark"] .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--surface);
+}
