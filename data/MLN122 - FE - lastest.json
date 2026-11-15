@@ -6103,7 +6103,7 @@
         {
           "id": 1,
           "content": "Phong kiến",
-          "is_correct": false
+          "is_correct": true
         },
         {
           "id": 2,
@@ -6113,7 +6113,7 @@
         {
           "id": 3,
           "content": "Tư bản chủ nghĩa",
-          "is_correct": true
+          "is_correct": false
         },
         {
           "id": 4,
