@@ -8136,12 +8136,12 @@
         {
           "id": 2,
           "content": "Chủ nghĩa trọng nông",
-          "is_correct": false
+          "is_correct": true
         },
         {
           "id": 3,
           "content": "Kinh tế chính trị cổ điển Anh",
-          "is_correct": true
+          "is_correct": false
         },
         {
           "id": 4,
