@@ -5512,12 +5512,12 @@
         {
           "id": 1,
           "content": "Tính chất tư nhân của hàng hóa",
-          "is_correct": false
+          "is_correct": true
         },
         {
           "id": 2,
           "content": "Tính chất xã hội của hàng hóa",
-          "is_correct": true
+          "is_correct": false
         },
         {
           "id": 3,
