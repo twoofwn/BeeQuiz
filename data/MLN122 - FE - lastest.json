@@ -57,7 +57,7 @@
     },
     {
       "id": 3,
-      "content": "Ai là người đề xuất ra ba loại thương nghiệp (trao đổi tự nhiên, trao đổi tiền tệ, trao đổi thông [?] giàu) và hai loại kinh doanh (kinh tế, sản xuất của cải)?",
+      "content": "Ai là người đề xuất ra ba loại thương nghiệp (trao đổi tự nhiên, trao đổi tiền tệ, ...) và hai loại kinh doanh (kinh tế, sản xuất của cải)?",
       "answersList": [
         {
           "id": 1,
@@ -609,7 +609,7 @@
     },
     {
       "id": 24,
-      "content": "Chỉ có sản phẩm của những lao động tư nhân độc lập và không phụ thuộc vào nhau mới đối [?] như là:",
+      "content": "Chỉ có sản phẩm của những lao động tư nhân độc lập và không phụ thuộc vào nhau mới đối diện với nhau như là:",
       "answersList": [
         {
           "id": 1,
@@ -1931,7 +1931,7 @@
     },
     {
       "id": 75,
-      "content": "Tư tưởng kinh tế đầu tiên của giai cấp tư sản trong giai đoạn phương thức sản xuất phong kiê [?] nghĩa tư bản ra đời đó là:",
+      "content": "Tư tưởng kinh tế đầu tiên của giai cấp tư sản trong giai đoạn phương thức sản xuất phong kiến tan rã và chủ nghĩa tư bản ra đời đó là:",
       "answersList": [
         {
           "id": 1,
@@ -6780,7 +6780,7 @@
     },
     {
       "id": 262,
-      "content": "Sự tuần hoàn của tư bản, nếu xét nó với tư cách là một quá trình định kỳ đổi mới và thường x[?] được gọi là:",
+      "content": "Sự tuần hoàn của tư bản, nếu xét nó với tư cách là một quá trình định kỳ đổi mới và thường xuyên lặp lại được gọi là:",
       "answersList": [
         {
           "id": 1,
@@ -8506,7 +8506,7 @@
     },
     {
       "id": 330,
-      "content": "Khi phân chia thể chế theo các yếu tố cấu thành lĩnh vực cốt lõi của xã hội, thể chế được phá[?] nhiều phương án)",
+      "content": "Khi phân chia thể chế theo các yếu tố cấu thành lĩnh vực cốt lõi của xã hội, thể chế được phân chia thành (nhiều phương án)",
       "answersList": [
         {
           "id": 1,
@@ -9497,7 +9497,7 @@
     },
     {
       "id": 368,
-      "content": "Theo quan điểm của kinh tế chính trị, trong tư liệu lao động bộ phận nào quyết định đến năn[?]",
+      "content": "Theo quan điểm của kinh tế chính trị, trong tư liệu lao động bộ phận nào quyết định đến năng suất lao động?",
       "answersList": [
         {
           "id": 1,
@@ -13312,7 +13312,7 @@
         },
         {
           "id": 2,
-          "content": "Chiếm hữu nô lệ [?]",
+          "content": "Chiếm hữu nô lệ",
           "is_correct": false
         },
         {
