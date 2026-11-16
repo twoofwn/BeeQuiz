@@ -26,7 +26,7 @@ function animateQuestion(direction) {
     runUiMotion(document.getElementById('quiz-options'), frames, { duration: 280 });
 }
 
-function animateAnswer(question, answerId, isCorrect) {
+function animateAnswer(question, answerId, isCorrect, isResolved = isCorrect) {
     const index = getOrderedAnswers(question).findIndex(answer => answer.id === answerId);
     const button = document.getElementById('quiz-options').children[index];
     runUiMotion(button, isCorrect ? [
@@ -35,10 +35,10 @@ function animateAnswer(question, answerId, isCorrect) {
         { transform: 'translateX(0)' }, { transform: 'translateX(-3px)' },
         { transform: 'translateX(3px)' }, { transform: 'translateX(0)' },
     ], { duration: 280 });
-    runUiMotion(document.getElementById('quiz-explanation-box'), [
+    if (isResolved) runUiMotion(document.getElementById('quiz-explanation-box'), [
         { opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' },
     ]);
-    if (isCorrect) runUiMotion(document.getElementById('quiz-score-badge'), [
+    if (isResolved && isCorrect) runUiMotion(document.getElementById('quiz-score-badge'), [
         { transform: 'scale(1)' }, { transform: 'scale(1.1)' }, { transform: 'scale(1)' },
     ], { duration: 300 });
 }

@@ -14,10 +14,10 @@ function applyQuizSession(session) {
     userAnswers = session.userAnswers;
     currentQuizIdx = session.currentQuizIdx;
     quizCompleted = session.completed;
-    quizScore = orderedQuestions.filter(question =>
-        Object.prototype.hasOwnProperty.call(userAnswers, question.id) &&
-        question.answersList.some(answer => answer.id === userAnswers[question.id] && answer.is_correct)
-    ).length;
+    quizScore = orderedQuestions.filter(question => {
+        const state = getQuestionAnswerState(question);
+        return state.resolved && state.correct;
+    }).length;
 }
 
 function serializeQuizSession(session) {
@@ -35,10 +35,7 @@ function getAllQuestions() {
 }
 
 function getWrongQuestions() {
-    return orderedQuestions.filter(question =>
-        Object.prototype.hasOwnProperty.call(userAnswers, question.id) &&
-        question.answersList.some(answer => answer.id === userAnswers[question.id] && !answer.is_correct)
-    );
+    return orderedQuestions.filter(question => getQuestionAnswerState(question).wrong);
 }
 
 function startReview(mode) {

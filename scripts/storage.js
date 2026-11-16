@@ -50,6 +50,47 @@ function restoreItemOrder(ids, items) {
     return [...ordered, ...remaining.values()];
 }
 
+function isMultiAnswerQuestion(question) {
+    return question.answersList.filter(answer => answer.is_correct).length > 1;
+}
+
+function getQuestionAnswerState(question, answerValue) {
+    const value = arguments.length > 1
+        ? answerValue
+        : (typeof userAnswers === 'undefined' ? undefined : userAnswers[question.id]);
+    const answerIds = new Set(question.answersList.map(answer => answer.id));
+    const isRecord = value && typeof value === 'object' && !Array.isArray(value);
+    const rawSelected = isRecord
+        ? (Array.isArray(value.selectedAnswerIds) ? value.selectedAnswerIds : [])
+        : (value === undefined || value === null ? [] : [value]);
+    const selectedAnswerIds = [...new Set(rawSelected.filter(id => answerIds.has(id)))];
+    const correctIds = question.answersList.filter(answer => answer.is_correct).map(answer => answer.id);
+    const hasWrongSelection = selectedAnswerIds.some(id => !correctIds.includes(id));
+
+    let status = 'unanswered';
+    if (selectedAnswerIds.length) {
+        if (isMultiAnswerQuestion(question)) {
+            if ((isRecord && value.status === 'wrong') || hasWrongSelection) {
+                status = 'wrong';
+            } else if (correctIds.every(id => selectedAnswerIds.includes(id))) {
+                status = 'correct';
+            } else {
+                status = 'in-progress';
+            }
+        } else {
+            status = hasWrongSelection ? 'wrong' : 'correct';
+        }
+    }
+
+    return {
+        selectedAnswerIds,
+        status,
+        resolved: status === 'correct' || status === 'wrong',
+        correct: status === 'correct',
+        wrong: status === 'wrong',
+    };
+}
+
 function restoreStoredSession(saved, questions, revisions, previousRevisions) {
     const previousAnswers = new Map(saved.userAnswers);
     const previousOrder = new Map(saved.answerOrder);
@@ -59,9 +100,17 @@ function restoreStoredSession(saved, questions, revisions, previousRevisions) {
     for (const question of orderedQuestions) {
         const id = String(question.id);
         if (previousRevisions.get(id) !== revisions.get(id)) continue;
-        const answerId = previousAnswers.get(id);
-        if (question.answersList.some(answer => answer.id === answerId)) {
-            validAnswers.push([id, answerId]);
+        const savedAnswer = previousAnswers.get(id);
+        const answerState = getQuestionAnswerState(question, savedAnswer);
+        if (answerState.selectedAnswerIds.length) {
+            if (isMultiAnswerQuestion(question)) {
+                validAnswers.push([id, {
+                    selectedAnswerIds: answerState.selectedAnswerIds,
+                    status: answerState.status,
+                }]);
+            } else {
+                validAnswers.push([id, answerState.selectedAnswerIds[0]]);
+            }
         }
         if (Array.isArray(previousOrder.get(id))) {
             answerOrder.set(id, restoreItemOrder(previousOrder.get(id), question.answersList));

@@ -86,7 +86,7 @@ function handleQuizShortcut(event) {
     const answerIndex = ['a', 'b', 'c', 'd'].indexOf(event.key.toLowerCase());
     if (answerIndex >= 0) {
         const question = orderedQuestions[currentQuizIdx];
-        if (!question || Object.prototype.hasOwnProperty.call(userAnswers, question.id)) return;
+        if (!question || getQuestionAnswerState(question).resolved) return;
         // Resolve the visible order each time, including after shuffle or storage restore.
         const answer = getOrderedAnswers(question)[answerIndex];
         if (!answer) return;
@@ -351,8 +351,9 @@ function loadQuizQuestion(direction = 1) {
     const optionsBox = document.getElementById("quiz-options");
     optionsBox.innerHTML = "";
 
-    const hasAnswered = Object.prototype.hasOwnProperty.call(userAnswers, q.id);
-    const selectedAnsId = userAnswers[q.id];
+    const answerState = getQuestionAnswerState(q);
+    const hasAnswered = answerState.resolved;
+    const selectedAnswerIds = new Set(answerState.selectedAnswerIds);
 
     getOrderedAnswers(q).forEach((ans, index) => {
         const btn = document.createElement("button");
@@ -362,13 +363,18 @@ function loadQuizQuestion(direction = 1) {
         btn.className = "w-full text-left p-4 rounded-xl border transition flex items-start gap-3 font-medium text-sm text-ink ";
 
         if (!hasAnswered) {
-            btn.className += "border-pale hover:bg-softcream hover:border-pale";
-            btn.onclick = () => selectQuizAnswer(q.id, ans.id, ans.is_correct);
+            if (selectedAnswerIds.has(ans.id)) {
+                btn.className += "bg-sky-soft border-brand text-brand";
+                btn.disabled = true;
+            } else {
+                btn.className += "border-pale hover:bg-softcream hover:border-pale";
+                btn.onclick = () => selectQuizAnswer(q.id, ans.id, ans.is_correct);
+            }
         } else {
             btn.disabled = true;
             if (ans.is_correct) {
                 btn.className += "bg-sky-soft border-brand text-brand";
-            } else if (ans.id === selectedAnsId && !ans.is_correct) {
+            } else if (selectedAnswerIds.has(ans.id)) {
                 btn.className += "bg-pink-soft border-pink text-pink-dark";
             } else {
                 btn.className += "border-pale opacity-60";
@@ -376,11 +382,11 @@ function loadQuizQuestion(direction = 1) {
         }
 
         btn.innerHTML = `
-            <span class="w-6 h-6 rounded-full border flex items-center justify-center shrink-0 text-xs font-bold mt-0.5 ${hasAnswered && ans.is_correct ? 'bg-brand text-white border-emerald-600' : (hasAnswered && ans.id === selectedAnsId ? 'bg-pink text-white border-rose-600' : 'border-pale bg-white')}">
+            <span class="w-6 h-6 rounded-full border flex items-center justify-center shrink-0 text-xs font-bold mt-0.5 ${(hasAnswered && ans.is_correct) || selectedAnswerIds.has(ans.id) ? (ans.is_correct ? 'bg-brand text-white border-emerald-600' : 'bg-pink text-white border-rose-600') : 'border-pale bg-white'}">
                 ${label}
             </span>
             <span class="flex-grow leading-relaxed">${ans.content}</span>
-            ${hasAnswered && ans.is_correct ? '<span aria-label="Đáp án đúng">✓</span>' : (hasAnswered && ans.id === selectedAnsId ? '<span aria-label="Đáp án sai">✕</span>' : '')}
+            ${(hasAnswered && ans.is_correct) || selectedAnswerIds.has(ans.id) ? (ans.is_correct ? '<span aria-label="Đáp án đúng">✓</span>' : '<span aria-label="Đáp án sai">✕</span>') : ''}
         `;
         optionsBox.appendChild(btn);
     });
@@ -407,13 +413,33 @@ function loadQuizQuestion(direction = 1) {
 }
 
 function selectQuizAnswer(questionId, answerId, isCorrect) {
-    if (Object.prototype.hasOwnProperty.call(userAnswers, questionId)) return;
-    userAnswers[questionId] = answerId;
-    if (isCorrect) quizScore++;
+    const question = orderedQuestions.find(item => item.id === questionId);
+    if (!question) return;
+    const currentState = getQuestionAnswerState(question);
+    if (currentState.resolved || currentState.selectedAnswerIds.includes(answerId)) return;
+    const answer = question.answersList.find(item => item.id === answerId);
+    const answerIsCorrect = answer ? answer.is_correct : isCorrect;
+    let questionIsCorrect;
+
+    if (isMultiAnswerQuestion(question)) {
+        const selectedAnswerIds = [...currentState.selectedAnswerIds, answerId];
+        const correctIds = question.answersList.filter(item => item.is_correct).map(item => item.id);
+        const status = !answerIsCorrect
+            ? 'wrong'
+            : correctIds.every(id => selectedAnswerIds.includes(id)) ? 'correct' : 'in-progress';
+        userAnswers[questionId] = { selectedAnswerIds, status };
+        questionIsCorrect = status === 'correct';
+    } else {
+        userAnswers[questionId] = answerId;
+        questionIsCorrect = answerIsCorrect;
+    }
+
+    if (questionIsCorrect) quizScore++;
     loadQuizQuestion(0);
     saveQuizProgress();
-    const question = orderedQuestions[currentQuizIdx];
-    if (question?.id === questionId) animateAnswer(question, answerId, isCorrect);
+    if (orderedQuestions[currentQuizIdx]?.id === questionId) {
+        animateAnswer(question, answerId, answerIsCorrect, getQuestionAnswerState(question).resolved);
+    }
 }
 
 function showQuizResult() {
